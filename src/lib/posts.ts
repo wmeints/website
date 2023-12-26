@@ -2,6 +2,13 @@ import path from "path";
 import fs from "fs";
 import matter from "gray-matter";
 
+interface PostParams {
+  year: string;
+  month: string;
+  day: string;
+  slug: string;
+}
+
 interface Post {
   path: string;
   metadata: {
@@ -11,12 +18,12 @@ interface Post {
     datePublished: string;
   },
   content: string,
-  params: {
-    year: string;
-    month: string;
-    day: string;
-    slug: string;
-  }
+  params: PostParams
+}
+
+export function getPostByParams(params: PostParams): Post | null {
+  const filteredPosts = posts.filter(x=> x.params.year === params.year && x.params.month === params.month && x.params.day === params.day && x.params.slug === params.slug);
+  return filteredPosts.length === 1 && filteredPosts[0] || null;
 }
 
 export function getAllPosts(): Post[] {
