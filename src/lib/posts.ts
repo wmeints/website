@@ -16,24 +16,33 @@ interface Post {
     category: string;
     dateCreated: string;
     datePublished: string;
-  },
-  content: string,
-  params: PostParams
+  };
+  content: string;
+  params: PostParams;
 }
 
 export function getPostByParams(params: PostParams): Post | null {
-  const filteredPosts = posts.filter(x=> x.params.year === params.year && x.params.month === params.month && x.params.day === params.day && x.params.slug === params.slug);
-  return filteredPosts.length === 1 && filteredPosts[0] || null;
+  const filteredPosts = posts.filter(
+    (x) =>
+      x.params.year === params.year &&
+      x.params.month === params.month &&
+      x.params.day === params.day &&
+      x.params.slug === params.slug
+  );
+  return (filteredPosts.length === 1 && filteredPosts[0]) || null;
 }
 
 export function getAllPosts(): Post[] {
   const rootDirectory = path.resolve("posts");
-  const files = fs.readdirSync(rootDirectory)
-    .flatMap(postDirectory => fs
-      .readdirSync(path.join(rootDirectory, postDirectory))
-      .map(file => path.join(rootDirectory, postDirectory, file)));
+  const files = fs
+    .readdirSync(rootDirectory)
+    .flatMap((postDirectory) =>
+      fs
+        .readdirSync(path.join(rootDirectory, postDirectory))
+        .map((file) => path.join(rootDirectory, postDirectory, file))
+    );
 
-  return files.map(file => {
+  return files.map((file) => {
     const slug = path.basename(file).replace(/\.md$/, "");
     const url = path.basename(path.dirname(file));
 
@@ -60,7 +69,7 @@ export function getAllPosts(): Post[] {
 }
 
 export function getAllCategories(posts: Post[]): string[] {
-  return Array.from(new Set(posts.map(post => post.metadata.category)));
+  return Array.from(new Set(posts.map((post) => post.metadata.category)));
 }
 
 export const posts = getAllPosts();
