@@ -1,6 +1,9 @@
 import path from "path";
 import fs from "fs";
 import matter from "gray-matter";
+import { remark } from "remark";
+import html from "remark-html";
+import prism from "remark-prism";
 
 interface PostParams {
   year: string;
@@ -17,7 +20,8 @@ interface Post {
     dateCreated: string;
     datePublished: string;
   };
-  content: string;
+  html: string;
+  markdown: string;
   params: PostParams;
 }
 
@@ -30,6 +34,10 @@ export function getPostByParams(params: PostParams): Post | null {
       x.params.slug === params.slug
   );
   return (filteredPosts.length === 1 && filteredPosts[0]) || null;
+}
+
+export function renderMarkdown(markdownContent: string): string {
+  return String(remark().use(prism).use(html).processSync(markdownContent));
 }
 
 export function getAllPosts(): Post[] {
@@ -57,7 +65,8 @@ export function getAllPosts(): Post[] {
         category: article.data.category,
         title: article.data.title,
       },
-      content: article.content,
+      markdown: article.content,
+      html: renderMarkdown(article.content),
       params: {
         year,
         month,
