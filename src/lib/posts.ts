@@ -1,9 +1,12 @@
 import path from "path";
 import fs from "fs";
 import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
-import prism from "remark-prism";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import rehypePrism from "@mapbox/rehype-prism";
+import remarkRehype from "remark-rehype";
+import rehypeFormat from "rehype-format";
+import rehypeStringify from "rehype-stringify";
 
 interface PostParams {
   year: string;
@@ -25,6 +28,13 @@ interface Post {
   params: PostParams;
 }
 
+const markdownPipeline = unified()
+  .use(remarkParse)
+  .use(remarkRehype)
+  .use(rehypePrism as any)
+  .use(rehypeFormat)
+  .use(rehypeStringify);
+
 export function getPostByParams(params: PostParams): Post | null {
   const filteredPosts = posts.filter(
     (x) =>
@@ -37,7 +47,7 @@ export function getPostByParams(params: PostParams): Post | null {
 }
 
 export function renderMarkdown(markdownContent: string): string {
-  return String(remark().use(prism).use(html).processSync(markdownContent));
+  return String(markdownPipeline.processSync(markdownContent));
 }
 
 export function getAllPosts(): Post[] {

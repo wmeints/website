@@ -12,6 +12,18 @@ interface Params {
   slug: string;
 }
 
+export function generateMetadata({ params }: { params: Params }) {
+  const post = getPostByParams(params);
+
+  if (!post) {
+    throw new Error("Post not found");
+  }
+
+  return {
+    title: `${post.metadata.title} - Willem's Fizzy Logic`,
+  };
+}
+
 export default function Page({ params }: { params: Params }) {
   const post = getPostByParams(params);
 
@@ -19,5 +31,12 @@ export default function Page({ params }: { params: Params }) {
     throw new Error("Post not found");
   }
 
-  return <PostContent html={post.html} />;
+  return (
+    <>
+      <h1 className="text-2xl font-bold lg:text-5xl">{post.metadata.title}</h1>
+      <div className="mt-3 lg:mt-12">
+        <PostContent html={post.html} />
+      </div>
+    </>
+  );
 }
