@@ -1,11 +1,14 @@
 ---
 title: Get started with Azure IoT hub
 category: Internet of Things
-datePublished: '2016-01-11'
-dateCreated: '2017-07-31'
+datePublished: "2016-01-11"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Microsoft has launched a preview for Azure IoT hub a while back. I didn't have the time back then<br>
+
 to check it out, but now that it has had some time to settle I think it's a good time to check things out.</p>
+
 <p>This time however I'm not going to try the .NET API which is a first class language if you're working with<br>
 Azure. Instead I'm going to see what it does when you try to use it from the Scala/Java perspective.</p>
 <!-- more -->
@@ -38,9 +41,10 @@ the build file for your Scala program to include the dependency:</p>
 <pre><code class="language-scala">resolvers += Resolver.mavenLocal
 
 libraryDependencies ++= Seq(
-    &quot;com.microsoft.azure.iothub-java-client&quot; % &quot;iothub-java-client&quot; % &quot;1.0.0-preview.8&quot;
+&quot;com.microsoft.azure.iothub-java-client&quot; % &quot;iothub-java-client&quot; % &quot;1.0.0-preview.8&quot;
 )
 </code></pre>
+
 <p>Keep in mind the dependency can only be found in the local maven repository. So add the local<br>
 maven repository to the resolvers in the build file. Without this you will get a build error.</p>
 <h2 id="settingthingsup">Setting things up</h2>
@@ -66,67 +70,68 @@ an actor using ReactivePI and connected it through a IotHubConnector actor.</p>
 <pre><code class="language-scala">class EventHubConnector(connectionString: String, deviceIdentifier: String) extends Actor
 with ActorLogging with IotHubProtocol {
 
-  import EventHubConnector._
+import EventHubConnector.\_
 
-  val connector = new DeviceClient(connectionString,IotHubClientProtocol.HTTPS)
+val connector = new DeviceClient(connectionString,IotHubClientProtocol.HTTPS)
 
-  val eventCallback = new IotHubEventCallback {
-    override def execute(iotHubStatusCode: IotHubStatusCode, o: scala.Any) =  {
-      // Make sure that the status is correct.
-      // Authorization errors should be raised as fatal as there's no way to recover from this scenario
-      // Everything else, retry and see if that fixes the problem.
-      iotHubStatusCode match {
-        case IotHubStatusCode.OK | IotHubStatusCode.OK_EMPTY =&gt; log.info(&quot;Delivered measurement&quot;)
-        case IotHubStatusCode.UNAUTHORIZED =&gt; throw new FatalHubException(&quot;Device key or identifier is invalid&quot;)
-        case _ =&gt; throw new HubException(s&quot;Request failed: $iotHubStatusCode&quot;)
-      }
-    }
-  }
+val eventCallback = new IotHubEventCallback {
+override def execute(iotHubStatusCode: IotHubStatusCode, o: scala.Any) = {
+// Make sure that the status is correct.
+// Authorization errors should be raised as fatal as there's no way to recover from this scenario
+// Everything else, retry and see if that fixes the problem.
+iotHubStatusCode match {
+case IotHubStatusCode.OK | IotHubStatusCode.OK*EMPTY =&gt; log.info(&quot;Delivered measurement&quot;)
+case IotHubStatusCode.UNAUTHORIZED =&gt; throw new FatalHubException(&quot;Device key or identifier is invalid&quot;)
+case * =&gt; throw new HubException(s&quot;Request failed: $iotHubStatusCode&quot;)
+}
+}
+}
 
-  def receive = {
-    // Deliver incoming measurements to the IoT hub in azure.
-    case event:Measurement =&gt; sendEvent(event)
-  }
+def receive = {
+// Deliver incoming measurements to the IoT hub in azure.
+case event:Measurement =&gt; sendEvent(event)
+}
 
-  private def sendEvent(measurement: Measurement) = {
-    import spray.json._
+private def sendEvent(measurement: Measurement) = {
+import spray.json.\_
 
     val msg = new Message(measurement.toJson.toString())
 
     connector.sendEventAsync(msg,eventCallback,null)
-  }
 
-  override def postStop() = {
-    connector.close()
-  }
+}
 
+override def postStop() = {
+connector.close()
+}
 
-  override def preStart() = {
-    connector.open()
-  }
+override def preStart() = {
+connector.open()
+}
 
-  override def preRestart(reason: Throwable, message: Option[Any]) = {
-    // Reprocess the message when the original issue was caused by a delivery failure.
-    // If something else caused the problem, mark the message as unhandled and continue.
-    (reason,message) match {
-      case (_: HubException,Some(msg)) =&gt; self.tell(msg,sender)
-      case (_:Exception,Some(msg)) =&gt; unhandled(msg)
-      case (_,_) =&gt; // Do nothing in this case, nothing to be processed.
-    }
-  }
+override def preRestart(reason: Throwable, message: Option[Any]) = {
+// Reprocess the message when the original issue was caused by a delivery failure.
+// If something else caused the problem, mark the message as unhandled and continue.
+(reason,message) match {
+case (_: HubException,Some(msg)) =&gt; self.tell(msg,sender)
+case (_:Exception,Some(msg)) =&gt; unhandled(msg)
+case (_,_) =&gt; // Do nothing in this case, nothing to be processed.
+}
+}
 
-  // Automatically restart for a maximum of 3 attempts when the delivery of a message failed.
-  // If something fatal happens, stop the process entirely and escalate the error.
-  override def supervisorStrategy: SupervisorStrategy = OneForOneStrategy(maxNrOfRetries = 3, withinTimeRange = 1 minute) {
-    case ex: FatalHubException =&gt;
-      log.error(ex,&quot;Failed to deliver event due to fatal error&quot;)
-      Escalate
-    case _ =&gt;
-      log.error(&quot;Failed to deliver event due to temporary problem with connector&quot;)
-      Restart
-  }
+// Automatically restart for a maximum of 3 attempts when the delivery of a message failed.
+// If something fatal happens, stop the process entirely and escalate the error.
+override def supervisorStrategy: SupervisorStrategy = OneForOneStrategy(maxNrOfRetries = 3, withinTimeRange = 1 minute) {
+case ex: FatalHubException =&gt;
+log.error(ex,&quot;Failed to deliver event due to fatal error&quot;)
+Escalate
+case \_ =&gt;
+log.error(&quot;Failed to deliver event due to temporary problem with connector&quot;)
+Restart
+}
 }
 </code></pre>
+
 <p>The code in the sample is quite a bit to take in at once. So let's break it down bit by bit.<br>
 The connector itself is an actor, this means it receives messages. Right now it receives<br>
 only one message, a measurement. When it receives the measurement it will try to post it to<br>
@@ -137,13 +142,14 @@ the Azure IoT hub.</p>
 }
 
 private def sendEvent(measurement: Measurement) = {
-  import spray.json._
+import spray.json.\_
 
-  val msg = new Message(measurement.toJson.toString())
+val msg = new Message(measurement.toJson.toString())
 
-  connector.sendEventAsync(msg,eventCallback,null)
+connector.sendEventAsync(msg,eventCallback,null)
 }
 </code></pre>
+
 <p>To post a new measurement to the IoT hub the connector needs an actual connection.<br>
 Connecting to an IoT hub is done by creating a new instance of the DeviceClient class.</p>
 <pre><code class="language-scala">val connector = new DeviceClient(connectionString,IotHubClientProtocol.HTTPS)

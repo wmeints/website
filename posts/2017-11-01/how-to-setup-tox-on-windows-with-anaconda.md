@@ -1,9 +1,10 @@
 ---
 title: How to setup tox on Windows with Anaconda
 category: Python
-datePublished: '2017-11-01'
-dateCreated: '2017-11-01'
+datePublished: "2017-11-01"
+dateCreated: "2017-11-01"
 ---
+
 <!--kg-card-begin: markdown--><p>When you are developing packages for Python you need some way to test whether your package works on someone else's computer. Tox is a great tool for this, but doesn't work well with Anaconda. With some basic steps however you can have your code tested on tox without much trouble.</p>
 <p>In this post I will show you how to configure Anaconda correctly for use with Tox on Windows 10.</p>
 <h2 id="whatistox">What is tox?</h2>
@@ -39,15 +40,16 @@ envlist=py27,py35
 [testenv]
 
 deps=
-    pytest
-    pytest-cov
-    pytest-mock
-    coverage
+pytest
+pytest-cov
+pytest-mock
+coverage
 
 commands=
-    python -c 'import nltk; nltk.download(&quot;punkt&quot;)'
-    py.test
+python -c 'import nltk; nltk.download(&quot;punkt&quot;)'
+py.test
 </code></pre>
+
 <p>The <code>tox</code> section specifies overall options for the tests. Here you specify the python versions you want to test against. Each python version is prefixed with the letter py and the major and minor version number.</p>
 <p>The <code>testenv</code> section specifies how to control the test environment (in the versions of python you specified in the <code>tox</code> section). For example, you can specify additional dependencies that should be installed in the environment.</p>
 <p>Also in the <code>testenv</code> section you will find the commands option. This option specifies which test commands should be run. For example, I need the nltk module to be installed and updated. Afterwards I want the unit-tests to be executed using <code>pytest</code>.</p>

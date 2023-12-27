@@ -1,12 +1,13 @@
 ---
 title: How to build a game with Unity - Part 1
 category: Unity
-datePublished: '2022-08-03'
-dateCreated: '2022-08-03'
+datePublished: "2022-08-03"
+dateCreated: "2022-08-03"
 ---
+
 Welcome to this new series of blog posts about building a game with Unity.
 In this series we're going to explore a fun vacation project that my son and I
-worked on in summer 2022. 
+worked on in summer 2022.
 
 In this first blogpost we'll go over our initial design process and how to
 set up Unity on a Windows computer. We'll cover the following topics:
@@ -21,7 +22,7 @@ Let's start by discussing why we started building a game.
 
 Most people who've read my articles will know that I often work on ML solutions
 and enterprise solutions for my work. I'm spending a lot of time explaining
-tools to build microservices or ML solutions. 
+tools to build microservices or ML solutions.
 
 While that's fun, I can assure that building a game with Unity is even more fun!
 For me there were two reasons to build a game:
@@ -29,7 +30,7 @@ For me there were two reasons to build a game:
 First, the kind of problems you run into when building a game are just
 different. You have to think about performance more, and you have to come up
 with solutions to things like hit-testing, computer controlled players, and
-more. 
+more.
 
 If that's not reason enough, another reason to build a game is that you get
 to play with what you made. The Unity editor is super friendly when it comes
@@ -42,7 +43,7 @@ control the mouse. He can't read yet, but we're having a ton of fun debugging
 the game and building the levels in the game. You don't really need to be able
 to read to design a level in Unity.
 
-Let me show you how to get started building a game in Unity. 
+Let me show you how to get started building a game in Unity.
 
 ## Setting up Unity
 
@@ -58,7 +59,7 @@ Once you have Unity installed you can create a new project from the Unity Hub.
 
 The hub features a number of templates to choose from. There are a set of core
 templates that you can use if you want to start from scratch. Alternatively,
-you can choose from one of the learning templates. The learning templates 
+you can choose from one of the learning templates. The learning templates
 are great when you want to learn how to build a particular kind of game.
 
 For our game we choose to go for the 2D template. This template configures the
@@ -105,9 +106,9 @@ most fun game to build.
 
 We asked ourselves a couple of questions before we started:
 
-* Do we want 3D or 2D?
-* What is the goal of the game we're building?
-* What does the gameplay look like?
+- Do we want 3D or 2D?
+- What is the goal of the game we're building?
+- What does the gameplay look like?
 
 I decided that our best option would be to start with a 2D game. I think 3D is
 fun, and I have some basic experience designing models, but I am miles away from
@@ -116,7 +117,7 @@ being a good designer.
 ### Choosing a graphical style
 
 Since I'm not a designer and neither is my 5 year old son, we decided to browse
-around on Google to find assets that we could use for the game. 
+around on Google to find assets that we could use for the game.
 
 We were really lucky to find two packages that are pretty nice to build a
 farming game with. We designed our game around these:
@@ -139,7 +140,7 @@ designers and buy a premium pack.
 
 I guess this is one of those first in a series blogposts. We didn't actually
 build anything yet. But we did decided on a particular approach to our game
-and set up the basics. 
+and set up the basics.
 
-In [the next part](/2022/08/03/how-to-build-a-game-with-unity-part-2), we'll cover how to start the level design. See you in the 
+In [the next part](/2022/08/03/how-to-build-a-game-with-unity-part-2), we'll cover how to start the level design. See you in the
 next part!

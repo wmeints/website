@@ -1,9 +1,10 @@
 ---
 title: What I've learned getting my colleagues up to speed with AI
 category: Machine Learning
-datePublished: '2018-06-04'
-dateCreated: '2018-06-04'
+datePublished: "2018-06-04"
+dateCreated: "2018-06-04"
 ---
+
 <!--kg-card-begin: markdown--><p>How do you start with AI when you're a developer and have no idea where to begin? Organize a workshop for your colleagues and challenge them to start exploring machine learning. I certainly learned a ton while organizing the AI learning experience. It was a lot of fun.</p>
 <h2 id="whatistheailearningexperience">What is the AI learning experience?</h2>
 <p>The AI Learning Experience is an initiative that I started with my colleague Joop Snijder to help people within Info Support to get started with AI.</p>

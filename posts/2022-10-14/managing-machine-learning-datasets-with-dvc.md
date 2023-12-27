@@ -1,13 +1,14 @@
 ---
 title: Managing machine-learning datasets with DVC
 category: Machine Learning
-datePublished: '2022-10-14'
-dateCreated: '2022-10-14'
+datePublished: "2022-10-14"
+dateCreated: "2022-10-14"
 ---
+
 Managing machine-learning projects is just a little more complex than regular software projects. You have to manage
 the code, the dataset that you use for training, and the model that you've trained to get a properly versioned program.
 
-I've found that most of the current MLOps tools that are around today offer some support for versioning data, models, 
+I've found that most of the current MLOps tools that are around today offer some support for versioning data, models,
 and code, but they aren't great for data scientist with a more code-oriented workflow.
 
 A couple of colleagues pointed me towards DVC, a data versioning tool that is supposed to make versioning data for
@@ -20,8 +21,8 @@ One of the challenges with machine-learning is that your program doesn't just us
 combination of data and code to build part of the application. The data and the code create a representation of reality
 that is then used by the rest of the application to do its job.
 
-Most of us are used to version their code using GIT or some other version control system. This ensures that when we 
-are searching for specific information about the code, we can get it back. 
+Most of us are used to version their code using GIT or some other version control system. This ensures that when we
+are searching for specific information about the code, we can get it back.
 
 In a machine learning project you want the same thing. You may want to grab a specific version of the code to reproduce
 a bug or add a feature. But as we talked about before, you need a specific version of the data too to reproduce the
@@ -40,7 +41,7 @@ Let's take a look at how you can install and use DVC in your project.
 ## Installing DVC
 
 To install DVC on Windows you can use a tool like Winget. Or you can use PIP to install DVC as a python package.
-You can also install DVC on Linux and Mac with similar tools. For the sake of this article, we'll install DVC as a 
+You can also install DVC on Linux and Mac with similar tools. For the sake of this article, we'll install DVC as a
 Python package using the following command:
 
 ```
@@ -99,7 +100,7 @@ Make sure you have a storage account with a blob container named `datasets`. The
 in with the Azure CLI before pushing the data to the storage account. As an alternative you can configure a SAS token
 or access key. We recommend sticking to the Azure CLI method on your work station as it's a safer alternative.
 
-You can find more information about configuring remotes in 
+You can find more information about configuring remotes in
 [the documentation](https://dvc.org/doc/command-reference/remote/modify)
 
 After configuring the remote, commit the changes to GIT and run the following command to push the files to the
@@ -122,7 +123,7 @@ dvc pull
 ```
 
 Please note that getting data to your workstation can take a while depending on the size of the dataset.
-After you've pulled the data, you can work with it as normal. 
+After you've pulled the data, you can work with it as normal.
 
 Now let's move on to managing versions and branches.
 
@@ -148,7 +149,7 @@ before running `dvc pull` to update the local storage of your dataset files.
 
 ### Removing data
 
-There are two options to remove data from DVC. You can either delete the files from disk and then run `dvc add` to 
+There are two options to remove data from DVC. You can either delete the files from disk and then run `dvc add` to
 track the changes. Or you can run `dvc remove <path>` to remove files. The `dvc remove` command leaves the files on
 disk but removes them from version history.
 
@@ -156,12 +157,12 @@ disk but removes them from version history.
 
 Managing data with DVC is not a lot of work but it's easy to forget a step when checking out a new branch or cloning
 a repo to disk. There's a helpful command `dvc install` that installs GIT hooks which automate `dvc checkout` and
-`dvc commit`. 
+`dvc commit`.
 
 ## Summary
 
-If you're planning on starting a new ML project, even for local experimentation, make sure you version your code and 
+If you're planning on starting a new ML project, even for local experimentation, make sure you version your code and
 dataset. DVC makes it a lot more pleasant so you don't have to create multiple data directories and worry about data
-loss. 
+loss.
 
 I can highly recommend using DVC. And I hope you find it as much fun as I did.

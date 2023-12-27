@@ -1,11 +1,14 @@
 ---
-title: 'How-to: Experiment with tensorflow in an interactive notebook'
+title: "How-to: Experiment with tensorflow in an interactive notebook"
 category: Machine Learning
-datePublished: '2016-12-03'
-dateCreated: '2017-07-31'
+datePublished: "2016-12-03"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>I've always wanted to build something with tensorflow. I have one demo lying around with tensorflow, but never<br>
+
 got around to develop something for real with this framework.</p>
+
 <p>Although tensorflow has a lot of samples available and documentation to get you going, it's not that easy to build<br>
 something real with it. To make it easier for me to experiment with it I've come up with a combination of tools<br>
 that allow you to experiment with tensorflow using interactive python notebooks.</p>

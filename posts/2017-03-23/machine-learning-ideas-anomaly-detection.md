@@ -1,9 +1,10 @@
 ---
-title: 'Machine learning ideas: Anomaly detection'
+title: "Machine learning ideas: Anomaly detection"
 category: Machine Learning
-datePublished: '2017-03-23'
-dateCreated: '2017-07-31'
+datePublished: "2017-03-23"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Machine Learning ideas: Anomaly detection using K-Means</p>
 <p>From time to time I come across Machine Learning ideas.  As I come across them I like to explain them to you my reader and encourage you to try them out.<br>
 In this post you will learn a method to detect abnormal transactions. I will show you how you can find weird transactions on your own bank account.</p>

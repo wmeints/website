@@ -1,9 +1,10 @@
 ---
-title: 'Time to do it differently, build chatbots with streams'
+title: "Time to do it differently, build chatbots with streams"
 category: Chatbots
-datePublished: '2018-03-09'
-dateCreated: '2018-03-09'
+datePublished: "2018-03-09"
+dateCreated: "2018-03-09"
 ---
+
 <!--kg-card-begin: markdown--><p>Currently when you want to build a chat bot in Microsoft Bot Builder you have to deal with the rather complicated dialog system. I really don't like it, but there isn't a very good alternative yet. I do think however that there are a few ways in which we can do a better job. For example, can you build a chatbot using streams and actors?</p>
 <p>In this post I will show you how I made a chatbot library with Akka.NET that uses streams and actors to model the chatbot.</p>
 <h2 id="whystreams">Why streams</h2>

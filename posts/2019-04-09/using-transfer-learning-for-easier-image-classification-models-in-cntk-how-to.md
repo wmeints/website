@@ -3,9 +3,10 @@ title: >-
   Using transfer-learning for easier image classification models in CNTK |
   How-to
 category: Machine Learning
-datePublished: '2019-04-09'
-dateCreated: '2019-04-08'
+datePublished: "2019-04-09"
+dateCreated: "2019-04-08"
 ---
+
 <p>Trying to train a neural  network to classify images is a challenge. You need a large amount of data and compute power to train models from scratch. Customers that I've worked for typically don't have the data or the compute power to train image classifiers from scratch. Luckily, they don't have to because there's a nice trick that will speed up the process quite a bit.</p><p>In this post I will show you how you can use pre-trained models and transfer-learning to build image classification models in CNTK with ease. </p><p>You can get the code for this post over in my Azure notebooks collection: <a href="https://notebooks.azure.com/FizzyHacks/projects/cntk/tree/transfer-learning">https://notebooks.azure.com/FizzyHacks/projects/cntk/tree/transfer-learning</a></p><p>If you're looking to train an image classifier based on an existing model you'll need to follow a two step process:</p><ol><li>Load and modify a pre-trained model</li><li>Refine the modified model with more data</li></ol><p>To show you how easy it is to use transfer-learning, we're going to use a pre-trained model to build a hotdog or dog model. This model is capable of distinguishing between a hotdog and a hot dog (teckle). Not very useful, I know, but I had to think  of something to demonstrate transfer-learning.</p><h2 id="loading-and-modifying-a-pre-trained-model">Loading and modifying a pre-trained model</h2><p>To start out, we're going to take a look at how to load and modify pre-trained models. </p><p>CNTK comes with a number of pre-trained models specifically trained on image data. You can find all of the trained models on Github: <a href="https://github.com/Microsoft/CNTK/tree/master/PretrainedModels">https://github.com/Microsoft/CNTK/tree/master/PretrainedModels</a></p><p>We're going to load the pre-trained <a href="https://arxiv.org/abs/1512.03385">Resnet18</a> model. The Resnet18 model is a relatively small state-of-the-art image recognition network. Because it's small we can train it relatively fast on a CPU especially since we're going to refine a pre-trained model.</p><p>First, we're going to download the pre-trained model and load it into memory.</p><h3 id="loading-the-pre-trained-model">Loading the pre-trained model</h3><p>To load the pre-trained Resnet18 model we need the following piece of code:</p><pre><code>import os
 from urllib.request import urlretrieve
 import cntk as C
@@ -14,18 +15,19 @@ url = 'https://www.cntk.ai/Models/CNTK_Pretrained/ResNet18_ImageNet_CNTK.model'
 model_file = os.path.join('models', 'resnet18.model')
 
 if not os.path.exists(model_file):
-    print('Model not found on disk.')
-    print('Downloading %s to %s' % (url, model_file))
+print('Model not found on disk.')
+print('Downloading %s to %s' % (url, model_file))
 
     os.makedirs('models', exist_ok=True)
     urlretrieve(url, model_file)</code></pre><p>It performs the following steps:</p><ol><li>First, it checks if the model is available on disk so we don't download it twice</li><li>Next, it creates a new model folder if the path doesn't exist yet</li><li>Then, it uses the <code>urlretrieve</code> function to download the model</li></ol><p>After the model is downloaded we can load the model using the following code:</p><pre><code>base_model = C.load_model(model_file)</code></pre><p>This code uses the <code>load_model</code> function to load the model graph from disk. </p><p>Once we have the model loaded, we can start to modify it. </p><h3 id="modifying-the-model">Modifying the model</h3><p>The current model doesn't fit the use-case that we're trying to implement. The pre-trained Resnet18 model requires normalized image data as input. The output of the model has 1000 neurons corresponding to the 1000 classes it can predict.</p><p>We don't have normalized data, we're using some images pulled from Google image search so we need to account for that. Also, we're only going to predict two classes: hotdog or dog. So we need to modify a few things.</p><p>We're going to perform a three step modification:</p><ol><li>First, we clone the layers that we need to reuse and freeze them to keep the trained parameters from the original model.</li><li>Next, we're going to replace the input variable with a setup that normalizes the input data.</li><li>Finally, we're going to attach a new output layer to the model so we only have two output neurons corresponding to the two classes that we have.</li></ol><p>Let's start by cloning the layers that we're going to reuse.</p><h3 id="cloning-the-layers">Cloning the layers</h3><p>Every CNTK graph has a method called <code>clone</code> that you can use to copy layers. You can choose to copy the layers with changeable weights or with frozen weights.</p><p>We're going to clone all layers except for the original input variable and the output layer of the network. For this we need to locate the input variable and output layer in the graph using the following code:</p><pre><code>features_node = C.logging.graph.find_by_name(base_model, 'features')
+
 last_node = C.logging.graph.find_by_name(base_model, 'z.x')</code></pre><p>The code performs the following steps:</p><ol><li>First, we find the <code>features</code> node in the base model, this is the input variable</li><li>Next, we find the <code>z.x</code> node, which is the input node for the final layer in the base model.</li></ol><p>Now that we have the pointers in the base model that we need we can clone the layers that we want to reuse using the following code:</p><pre><code>cloned_layers = C.combine([last_node.owner]).clone(
-        C.CloneMethod.freeze, 
-        { features_node: C.placeholder(name='features') })</code></pre><p>This code performs the following steps:</p><ol><li>First, it creates a new model function using the combine operator. This takes the owner of the last layer, so we skip the output layer.</li><li>Next, it clones the function up to the second-to-last layer. We specify that we want to freeze the parameters in the model and use a placeholder for the features node in the model.</li></ol><p>The output of the code is a cloned set of layers that we can't optimize further. Now we can start to connect a new input and output layer to this set of cloned layers.</p><h3 id="attaching-a-new-input-layer-to-the-model">Attaching a new input layer to the model</h3><p>In the previous section we've cloned the pre-trained model and removed the input and output layer of the model. In our new model we want to be able to feed in raw pixel data that isn't normalized. The model should normalize the raw pixel data before it is passed through the next of the model.</p><p>The following code demonstrates how to create a new input variable and input layer for the model:</p><pre><code>features_input = C.input_variable((3,224,224), name='features')
+C.CloneMethod.freeze,
+{ features_node: C.placeholder(name='features') })</code></pre><p>This code performs the following steps:</p><ol><li>First, it creates a new model function using the combine operator. This takes the owner of the last layer, so we skip the output layer.</li><li>Next, it clones the function up to the second-to-last layer. We specify that we want to freeze the parameters in the model and use a placeholder for the features node in the model.</li></ol><p>The output of the code is a cloned set of layers that we can't optimize further. Now we can start to connect a new input and output layer to this set of cloned layers.</p><h3 id="attaching-a-new-input-layer-to-the-model">Attaching a new input layer to the model</h3><p>In the previous section we've cloned the pre-trained model and removed the input and output layer of the model. In our new model we want to be able to feed in raw pixel data that isn't normalized. The model should normalize the raw pixel data before it is passed through the next of the model.</p><p>The following code demonstrates how to create a new input variable and input layer for the model:</p><pre><code>features_input = C.input_variable((3,224,224), name='features')
 normalized_features = features_input - C.Constant(114)</code></pre><p>The code performs the following steps:</p><ol><li>First, we create a new input variable with three channels and a size of 224x224 pixels so we can feed images into the model.</li><li>Then, we take the features from the input variable and subtract a constant value of 114 from all three channels. This normalizes the data to a format that the model understands.</li></ol><p>Once we have the input layer, we can attach it to our cloned layers using the following code:</p><pre><code>z = cloned_layers(normalized_features)</code></pre><p>When we invoke the cloned_layers variable as a function and feed it the normalized_features variable, we get back a new model function that connects the input to the model.</p><p>With the input connected, let's take a look at connecting the new output layer next.</p><h3 id="connecting-a-new-output-layer">Connecting a new output layer</h3><p>To connect a new output layer we need to define a new Dense layer with a softmax activation function. We can do this using the following code:</p><pre><code>output_layer = C.layers.Dense(2, activation=C.ops.softmax, name='output')</code></pre><p>The new Dense layer has two neurons, one for <em>hotdog</em>, and another one for <em>dog</em>. We've given it a name <code>output</code> so it's easier to find when we want to use the model.</p><p>To connect the model to the new output layer we need to write one more line of code:</p><pre><code>z = output_layer(z)</code></pre><p>This code takes the <code>z</code> variable that we created in the previous section and connects it to the output layer by invoking the output layer function with the <code>z</code> variable as input.</p><p>We now have a fully connected model that we can start to fine-tune with new samples. </p><h2 id="refining-the-modified-model">Refining the modified model</h2><p>In the previous section we've loaded a pre-trained model and modified it so it fits our use-case. Most of the layers in this modified model are fully trained. We only need to optimize the parameters in the output layer.</p><p>To optimize the output layer, we need to perform a couple of steps:</p><ol><li>First, we need to create a mini-batch source for our training and test data</li><li>Next, we need to define a criterion and learner to optimize the parameters</li><li>Finally, we need to train the model</li></ol><p>Let's start with loading the data to train the model.</p><h3 id="creating-a-new-minibatch-source-for-training-and-testing">Creating a new minibatch source for training and testing</h3><p>We don't have a huge dataset available, there are 20 images in total for training and 10 for validation. Each class is equally represented, 15 dogs and 15 hotdogs. </p><p>To load the data we're going to use a mini-batch source. The following code defines a utility function to make the process of creating a mini-batch source easier.</p><pre><code>def create_datasource(filename, sweeps=C.io.INFINITELY_REPEAT):
-    image_transforms = [
-        C.io.transforms.scale(224, 224, 3),
-    ]
+image_transforms = [
+C.io.transforms.scale(224, 224, 3),
+]
 
     streams = C.io.StreamDefs(
         image=C.io.StreamDef('image', transforms=image_transforms),
@@ -35,42 +37,46 @@ normalized_features = features_input - C.Constant(114)</code></pre><p>The code p
     serializer = C.io.ImageDeserializer(filename, streams)
 
     return C.io.MinibatchSource(serializer, max_sweeps=sweeps)</code></pre><p>This code performs the following steps:</p><ol><li>First, we create a set of image transformations that take the input image and scale it to 224 by 224 pixels with 3 channels. This is required so the data fits the model that we're working with.</li><li>Next, we define a set of streams to read from the input file. </li><li>In the set of streams we define a stream for the image file and attach the transforms to this stream.</li><li>Then, we define another stream to load the labels which has a shape of 2 since we have two labels that we can predict.</li><li>After defining the streams, we define a new image deserializer to read the streams from the input file.</li><li>Finally, we create the mini-batch source with the deserializer and the sweeps setting.</li></ol><p>We can use this utility function to create a test datasource and a training datasource:</p><pre><code>train_datasource = create_datasource('data/train/mapping.txt')
+
 test_datasource = create_datasource('data/test/mapping.txt', sweeps=1)</code></pre><p>The first datasource reads the <code>mapping.txt</code> from <code>data/train</code>, the second reads the <code>mapping.txt</code> file from the <code>data/test</code> folder and has a sweep setting of 1. </p><p>We've just configured the data sources for training and validation, now we can go ahead and set up the criterion and learner for the model.</p><h3 id="defining-the-criterion-and-learner-for-the-model">Defining the criterion and learner for the model</h3><p>The criterion for a deep learning model in CNTK is defined as a combination of a loss and metric. The loss is used to determine how to optimize the weights. The metric is used to measure the performance during training and testing.</p><p>A criterion can be created using a criterion factory function which is demonstrated below:</p><pre><code>@C.Function
 def create_criterion(z, targets):
-    loss = C.losses.cross_entropy_with_softmax(z, targets)
-    metric = C.metrics.classification_error(z, targets)
-    
+loss = C.losses.cross_entropy_with_softmax(z, targets)
+metric = C.metrics.classification_error(z, targets)
+
     return loss, metric</code></pre><p>This code performs the following steps:</p><ol><li>First, we define a new function marked with the C.Function annotation. </li><li>Next, we create a new loss function <code>cross_entropy_with_softmax</code></li><li>Then, we create a new metric function <code>classification_error</code></li><li>Finally, the function returns the <code>loss</code> and <code>metric</code> in a tuple</li></ol><p>You can use the criterion factory function to create the criterion for the model using the following code:</p><pre><code>targets_input = C.input_variable(2)
+
 criterion = create_criterion(z, targets_input)</code></pre><p>The code performs the following steps:</p><ol><li>First, it creates a new input variable for the target labels</li><li>Then, it invokes the create_criterion function with the model and targets input</li></ol><p>Now that we have the criterion, we can create the learner to optimize the parameters in the model using the following code:</p><pre><code>learner = C.learners.sgd(z.parameters, lr=0.01)</code></pre><p>This initializes the SGD learner with the parameters of the model and a learning rate of 0.01. </p><p>We're ready to start to train the model, in the next section we'll use the criterion with the learner to train the model using the data from the <code>train_datasource</code>.</p><h3 id="training-the-model">Training the model</h3><p>In the previous sections we've created everything that we need to train the classifier. We can use the following code to set up the training process:</p><pre><code>progress_writer = C.logging.ProgressPrinter(0)
 test_config = C.train.TestConfig(test_datasource)
 
 input_map = {
-    features_input: train_datasource.streams.image,
-    targets_input: train_datasource.streams.label
+features_input: train_datasource.streams.image,
+targets_input: train_datasource.streams.label
 }
 
 criterion.train(
-    train_datasource,
-    parameter_learners=[learner],
-    callbacks=[progress_writer, test_config],
-    model_inputs_to_streams=input_map,
-    epoch_size=20,
-    max_epochs=20
-)</code></pre><p>This code performs the following steps:</p><ol><li>First, we create a ProgressPrinter to log the output of the training process</li><li>Then, we create a TestConfig to validate the model after it's trained</li><li>Next, we set up a mapping between the input variables and the streams from the training datasource</li><li>After that, we start the training process by invoking the train method on the criterion function object that we created earlier.</li></ol><p>When we run the code, it will produce output similar to the following:</p><pre><code> average      since    average      since      examples
-    loss       last     metric       last              
- ------------------------------------------------------
+train_datasource,
+parameter_learners=[learner],
+callbacks=[progress_writer, test_config],
+model_inputs_to_streams=input_map,
+epoch_size=20,
+max_epochs=20
+)</code></pre><p>This code performs the following steps:</p><ol><li>First, we create a ProgressPrinter to log the output of the training process</li><li>Then, we create a TestConfig to validate the model after it's trained</li><li>Next, we set up a mapping between the input variables and the streams from the training datasource</li><li>After that, we start the training process by invoking the train method on the criterion function object that we created earlier.</li></ol><p>When we run the code, it will produce output similar to the following:</p><pre><code> average since average since examples
+loss last metric last
+
+---
+
 Learning rate per minibatch: 0.01
-    0.589      0.589      0.281      0.281            32
-    0.544      0.544      0.156      0.156            32
-     0.54       0.54      0.125      0.125            32
-    0.457      0.457     0.0625     0.0625            32
-     0.51       0.51      0.125      0.125            32
-    0.464      0.464     0.0938     0.0938            32
-    0.462      0.462     0.0938     0.0938            32
-    0.487      0.487      0.125      0.125            32
-    0.419      0.419     0.0625     0.0625            32
-    0.465      0.465      0.125      0.125            32
-    0.439      0.439     0.0938     0.0938            32
-    0.469      0.469      0.125      0.125            32
-    0.399      0.399     0.0625     0.0625            16
-Finished Evaluation [1]: Minibatch[1-1]: metric = 20.00% * 10;</code></pre><p>The classification error during training goes down to 6,25% while the classification error on the test set is 20%. The model does overfit a little bit, but it's not bad given that we only have 20 samples to train on.</p><p>Now that we have a trained model, let's take a look at how to export it so we can use it from other applications.</p><h2 id="final-steps">Final steps </h2><p>There's one more thing left to do. If we want to use the model in a different application we need to store the model on disk and use it in our application. CNTK supports storing files in ONNX and CNTK format. ONNX is an interoperable open format that allows you to load trained models in various languages such as Java or C#. So if you're planning on building an image classifier that you want to use in a mobile application or website then ONNX is your best bet.</p><p>Here's how to store the model in the ONNX format:</p><pre><code>z.save('model.onnx', C.ModelFormat.ONNX)</code></pre><p>Now it's time to have some fun! Download the ONNX runtime for C# or use DeepLearning4J to load the model. I'll leave it up to you to make something fun with the sample code in this post.</p><h2 id="ready-to-learn-more">Ready to learn more?</h2><p>And on that note, I want to take a minute to promote my book. Deep Learning with Microsoft Cognitive Toolkit Quick Start Guide is a short book that helps you get started with deep learning. I've worked together with Packt to create this book to maximize your profits and minimize the effort to learn about deep learning. </p><figure class="kg-card kg-image-card"><img src="/content/images/2019/04/book-cover.jpg" class="kg-image"></figure><p>You can find out more about my book on <a href="https://www.amazon.com/Learning-Microsoft-Cognitive-Toolkit-Quick-dp-1789802997/dp/1789802997/">Amazon</a>.</p><p>Hope you enjoyed this post, and see you soon!</p>
+0.589 0.589 0.281 0.281 32
+0.544 0.544 0.156 0.156 32
+0.54 0.54 0.125 0.125 32
+0.457 0.457 0.0625 0.0625 32
+0.51 0.51 0.125 0.125 32
+0.464 0.464 0.0938 0.0938 32
+0.462 0.462 0.0938 0.0938 32
+0.487 0.487 0.125 0.125 32
+0.419 0.419 0.0625 0.0625 32
+0.465 0.465 0.125 0.125 32
+0.439 0.439 0.0938 0.0938 32
+0.469 0.469 0.125 0.125 32
+0.399 0.399 0.0625 0.0625 16
+Finished Evaluation [1]: Minibatch[1-1]: metric = 20.00% \* 10;</code></pre><p>The classification error during training goes down to 6,25% while the classification error on the test set is 20%. The model does overfit a little bit, but it's not bad given that we only have 20 samples to train on.</p><p>Now that we have a trained model, let's take a look at how to export it so we can use it from other applications.</p><h2 id="final-steps">Final steps </h2><p>There's one more thing left to do. If we want to use the model in a different application we need to store the model on disk and use it in our application. CNTK supports storing files in ONNX and CNTK format. ONNX is an interoperable open format that allows you to load trained models in various languages such as Java or C#. So if you're planning on building an image classifier that you want to use in a mobile application or website then ONNX is your best bet.</p><p>Here's how to store the model in the ONNX format:</p><pre><code>z.save('model.onnx', C.ModelFormat.ONNX)</code></pre><p>Now it's time to have some fun! Download the ONNX runtime for C# or use DeepLearning4J to load the model. I'll leave it up to you to make something fun with the sample code in this post.</p><h2 id="ready-to-learn-more">Ready to learn more?</h2><p>And on that note, I want to take a minute to promote my book. Deep Learning with Microsoft Cognitive Toolkit Quick Start Guide is a short book that helps you get started with deep learning. I've worked together with Packt to create this book to maximize your profits and minimize the effort to learn about deep learning. </p><figure class="kg-card kg-image-card"><img src="/content/images/2019/04/book-cover.jpg" class="kg-image"></figure><p>You can find out more about my book on <a href="https://www.amazon.com/Learning-Microsoft-Cognitive-Toolkit-Quick-dp-1789802997/dp/1789802997/">Amazon</a>.</p><p>Hope you enjoyed this post, and see you soon!</p>

@@ -1,9 +1,10 @@
 ---
 title: Using Akka.NET from your ASP.NET core application
 category: .NET
-datePublished: '2016-05-22'
-dateCreated: '2017-07-31'
+datePublished: "2016-05-22"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>ASP.NET Core is a great web framework. Now that RC2 is out I can recommend you take a look at it. The tooling is much more solid now and the API is looking stable as well.</p>
 <p>One of the things I've been meaning to try for weeks now is to use actors in my ASP.NET Core application. So here it goes.</p>
 <!-- more -->
@@ -42,8 +43,10 @@ more readable.</p>
     }
 
     // ... The rest of your startup class
+
 }
 </code></pre>
+
 <h2 id="theactorlifecycleinawebapplication">The actor lifecycle in a web application</h2>
 <p>Once you have an actor system you can start a new actor by asking for a specific actor based on a set of properties.</p>
 <pre><code class="language-csharp">public class HomeController: Controller
@@ -60,9 +63,11 @@ more readable.</p>
     {
         var actorRef = _actorSystem.ActorOf(Props.Create&lt;MyActor&gt;());
         return await actorRef.Ask&lt;string&gt;(name);
-    }  
+    }
+
 }
 </code></pre>
+
 <p>In the sample above I've loaded the actor system in my controller and create a new actor instance every time I receive a request.</p>
 <p>This means you get a new actor per request. It is simple, but can be quite memory intensive depending on what your actor does.</p>
 <p>To make the most of Akka.NET it is best to use its routing and scaling capabilities.</p>
@@ -76,7 +81,7 @@ more readable.</p>
 
 public class MyActorInstance: IMyActorInstance
 {
-    private IActorRef _actor;
+private IActorRef \_actor;
 
     public MyActorInstance(ActorSystem actorSystem)
     {
@@ -87,8 +92,10 @@ public class MyActorInstance: IMyActorInstance
     {
         return await _actor.Ask&lt;string&gt;(name);
     }
+
 }
 </code></pre>
+
 <p>Now that you have a proper wrapper you can register that wrapper with the service collection and use that instead. One other advantage over using actor references directly is that you can manage the message interface much better.</p>
 <p>To use the wrapper reference it in the controller and call the provided methods to send a message to your actor.</p>
 <h2 id="scalingtheactor">Scaling the actor</h2>
@@ -96,8 +103,9 @@ public class MyActorInstance: IMyActorInstance
 <pre><code class="language-csharp">var actorProps = Props.Create&lt;MyActor&gt;()
     .WithRouter(new RoundRobinPool(5));
 
-_actor = actorSystem.ActorOf(actorProps,&quot;my-actor&quot;);
+\_actor = actorSystem.ActorOf(actorProps,&quot;my-actor&quot;);
 </code></pre>
+
 <p>This code tells Akka.NET we want a custom router with the actor. The <code>RoundRobinPool</code> router uses a round robin distribution algorithm to distribute the messages over the actor instances.</p>
 <p>The round robin pool router isn't the only router available to you. You can also use the Broadcast router for scenarios where you need many actors to respond to a message. There's also routers that allow you to pin a series of messages to the same actor instance.</p>
 <p>You can use the router setup in the sample as a means to scale. But you that is not the only scenario that routers in Akka.NET support. So I suggest you spend a little time to explore routing when you start to look at Akka.NET.</p>

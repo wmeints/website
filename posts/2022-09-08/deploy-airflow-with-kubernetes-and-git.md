@@ -1,9 +1,10 @@
 ---
 title: How to deploy Airflow with Kubernetes and GIT
 category: Machine Learning
-datePublished: '2022-09-08'
-dateCreated: '2022-09-08'
+datePublished: "2022-09-08"
+dateCreated: "2022-09-08"
 ---
+
 When I started working on MLOps a couple of years ago I ran into Azure Machine
 Learning first, because that's what the community around me was using. Turns
 out, it's not the only product out there. I already knew this, but I Ignored other
@@ -11,7 +12,7 @@ products because we were happy with Azure ML at the time.
 
 Now this may sound like I'm no longer happy with Azure ML and want to move away.
 But that's not what this is about. I think you should always explore other
-technology options from time to time. 
+technology options from time to time.
 
 In this post we're going to take a look at Apache Airflow. It's a tool for
 building data pipelines that does an awesome job as a ML pipeline too.
@@ -55,14 +56,14 @@ To run Apache Airflow in production you'll need to either set up multiple
 virtual machines or use something like Kubernetes to host the tools.
 
 For the purpose of this post I'm going to use Kubernetes as the hosting
-platform. 
+platform.
 
 Apache Airflow provides a helm chart to deploy the required components on
-Kubernetes. 
+Kubernetes.
 
 Helm is a package manager for Kubernetes. It allows you to install a diverse set
 of applications on Kubernetes without having to manually install tens or
-hundreds of manifests. 
+hundreds of manifests.
 
 If you haven't used Helm before, you can find a great getting-started guide on
 [their website](https://helm.sh/docs/intro/quickstart/).
@@ -106,12 +107,12 @@ data:
 
 We're configuring a set of secrets in this file:
 
-* First, we configure the `webserverSecretKey` so that sessions are signed with
+- First, we configure the `webserverSecretKey` so that sessions are signed with
   unique signature. This prevents users from transferring a session between
   different installations of Airflow.
-* Next, we configure the password for the default user `admin`. You'll want to
+- Next, we configure the password for the default user `admin`. You'll want to
   set something strong here.
-* Then, we configure the username and password for the database connection. The
+- Then, we configure the username and password for the database connection. The
   helm chart for Airflow configures a database server and the airflow server.
   Helm will automatically set the right password for the database server and the
   airflow server so it can connect.
@@ -168,7 +169,7 @@ extraSecrets:
 ```
 
 You'll need to configure the URL to your GIT repository. I've used a Github
-repository in the [sample code](https://github.com/wmeints/mlops-airflow-sample). 
+repository in the [sample code](https://github.com/wmeints/mlops-airflow-sample).
 
 Next, you're going to have to tell Airflow where the DAG files are located in
 the repository. I've stored them in a sub folder, but you can store them in the
@@ -270,7 +271,7 @@ because the user interface is not as fancy as the one provided by Microsoft.
 However, the engine is lightning fast, and it's really easy to write a pipeline.
 
 Another great feature is that it syncs with source control. That way, I know
-what stuff is getting executed on an environment. 
+what stuff is getting executed on an environment.
 
 A good tip: It's useful to have a staging environment that reads from the main branch
 and a production environment that reads from a release branch. No need to mess up

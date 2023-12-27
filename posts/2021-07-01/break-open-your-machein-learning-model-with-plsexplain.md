@@ -1,10 +1,11 @@
 ---
 title: Break open your machine learning model with plsexplain
 category: Machine Learning
-datePublished: '2021-07-01'
-dateCreated: '2021-07-01'
+datePublished: "2021-07-01"
+dateCreated: "2021-07-01"
 ---
-While working with some of the popular explainable AI libraries out there I 
+
+While working with some of the popular explainable AI libraries out there I
 kept running into the fact that it's quite a lot of work to set up explainers
 for your machine learning models. I figured: Why not ask the computer to come
 up with some useful explanations on its own?
@@ -52,7 +53,7 @@ your model. When you click on the "Model" page, you'll get a different view.
 
 ![Model explanations](/content/images/2021/07/01/dashboard-02.png)
 
-This page shows you the impact that each feature has on the outcome of your 
+This page shows you the impact that each feature has on the outcome of your
 model. You can click on one of the features to zoom in and get more information
 about the impact of individual values of the feature on the outcome of the model.
 
@@ -73,12 +74,12 @@ with a header and comma as the separator for the fields.
 It's cool that you can have a basic model explanation with one command. To me
 it looks promising and I'm planning to add some more things to it:
 
-* Support for tensorflow and pytorch: I'm planning on supporting these models
+- Support for tensorflow and pytorch: I'm planning on supporting these models
   so you can get insights into those types of models as well.
-* Support for more dataset types: CSV files are pretty limited. Once I'm going
+- Support for more dataset types: CSV files are pretty limited. Once I'm going
   to work on the deep-learning models, I'm also going to add support for images
   so that you can explain computer vision models as well as tabular models.
-* Support for live monitoring: The offline use of this dashboard is nice, but I
+- Support for live monitoring: The offline use of this dashboard is nice, but I
   think it will be even more powerful when you add support for live monitoring.
   The idea is that you can send samples to the dashboard through an API and they
   will get explained as they come in.

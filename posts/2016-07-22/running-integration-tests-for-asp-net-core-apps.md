@@ -1,12 +1,15 @@
 ---
 title: Running integration tests for ASP.NET Core apps
 category: .NET
-datePublished: '2016-07-22'
-dateCreated: '2017-07-31'
+datePublished: "2016-07-22"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>One of the things I really disliked about the previous versions of ASP.NET is that<br>
+
 there's no real good way to run integration tests on your web application. You basically<br>
 have to set up a full webserver to run integration tests.</p>
+
 <p>Of course if you use Web API 2 or MVC 5 you have the official testhost. It solves a lot<br>
 of problems, but the API is a mess to work with and very inflexible.</p>
 <p>The story for ASP.NET Core is quite different. You can now do a lot more in your testcode<br>
@@ -44,8 +47,10 @@ public async Task MyFirstIntegrationTest()
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }
+
 }
 </code></pre>
+
 <p>First you need to create a new <code>TestServer</code> instance. It needs access to a <code>ç</code>,<br>
 which is pretty much the same thing as you will find in your <code>Program.cs</code> file.</p>
 <p>The <code>WebHostBuilder</code> is responsible for configuring your application. You can call<br>

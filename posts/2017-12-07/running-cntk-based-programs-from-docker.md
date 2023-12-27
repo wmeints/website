@@ -3,9 +3,10 @@ title: >-
   How-to: run Microsoft Cognitive Toolkit based application inside a Docker
   image
 category: Machine Learning
-datePublished: '2017-12-07'
-dateCreated: '2017-12-06'
+datePublished: "2017-12-07"
+dateCreated: "2017-12-06"
 ---
+
 <!--kg-card-begin: markdown--><p>As part of a Community Hack at Microsoft Denmark people can hack together basic AI models with CNTK. Two fellow MVPs asked me if they could use Docker to work on CNTK applications.</p>
 <p>Sure you can work with a Docker image on CNTK stuff. Microsoft has a Docker image for CNTK. I've created an image on top that includes some additional configuration to make things even easier. You can download it right here: <a href="https://github.com/wmeints/ai-community-hack/archive/master.zip">ai-community-hack image</a></p>
 <h2 id="howdoesitwork">How does it work</h2>
@@ -15,6 +16,7 @@ dateCreated: '2017-12-06'
 
 ....
 </code></pre>
+
 <p>You then add a CMD line to your own Dockerfile and execute your Python code with that. The format for the CMD line however is somewhat different than normal.</p>
 <p>You have to first activate the CNTK environment in the docker image and then run your python command like so:</p>
 <pre><code>CMD [&quot;/bin/bash&quot;,&quot;-c&quot;,&quot;source /cntk/activate-cntk &amp;&amp; python &lt;your-script-path&gt;&quot;]

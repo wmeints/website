@@ -3,13 +3,16 @@ title: >-
   Add a search function to your application with ElasticSearch in under 10
   minutes
 category: Elastic Search
-datePublished: '2015-09-12'
-dateCreated: '2017-07-31'
+datePublished: "2015-09-12"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>I personally think that one of the most important, yet underrated features of any<br>
+
 enterprise web application is search. Most people think about it, but then go ahead<br>
 and use things like SQL full-text search or some other form of search that isn't<br>
 really a search engine.</p>
+
 <p>This is sad, since there's so much more to get for your users than a complex search<br>
 form that requires them to enter data in 5 fields and get nothing in return.</p>
 <p>I think that if you add proper search you can easily shave of minutes of any workflow<br>
@@ -91,9 +94,9 @@ using Polly;
 
 namespace Weblog.Services
 {
-    public class PostIndexer: IPostIndexer
-    {
-        private ElasticClient _client;
+public class PostIndexer: IPostIndexer
+{
+private ElasticClient \_client;
 
         public PostIndexer()
         {
@@ -113,8 +116,10 @@ namespace Weblog.Services
                     .Index(&quot;weblog&quot;).Type(&quot;post&quot;));
         }
     }
+
 }
 </code></pre>
+
 <p>To talk to ElasticSearch you have to create a new instance of the ElasticClient class.<br>
 This class requires a set of connection settings. These settings define the server<br>
 you want to connect to the server and some basic options for communicating with the server.</p>
@@ -147,43 +152,46 @@ for the user. Retrieving results in a paged manner keeps the performance high as
 		.Handle&lt;Exception&gt;()
 		.CircuitBreakerAsync(3, TimeSpan.FromSeconds(60));
 
-	private ElasticClient _client;		
+    private ElasticClient _client;
 
-	public PostSearcher()
-	{
-		var node = new Uri(&quot;http://localhost:9200&quot;);
-		var settings = new ConnectionSettings(node);
+    public PostSearcher()
+    {
+    	var node = new Uri(&quot;http://localhost:9200&quot;);
+    	var settings = new ConnectionSettings(node);
 
-		_client = new ElasticClient(settings);
-	}
+    	_client = new ElasticClient(settings);
+    }
 
-	public async Task&lt;PagedResult&lt;IndexedPost&gt;&gt; FindPostsAsync(string query, int pageIndex)
-	{
-		// Use a circuit breaker to make the indexer operation more resistent against problems.
-		// When this operation fails three times, we stop for a minute before trying again.
-		return await CircuitBreaker.ExecuteAsync(async () =&gt; {
-			// Important: For easy search, stick to the query_string operator.
-			// This will automatically convert your query string into terms and search for them.
-			// Doing this manually is possible, but a more difficult to do.
-			var results = await _client.SearchAsync&lt;IndexedPost&gt;(searchRequest =&gt; searchRequest
-  			.Index(&quot;weblog&quot;)
-  			.Type(&quot;post&quot;)
-  			.From(pageIndex * 30)
-  			.Take(30)
-  			.Query(querySpec =&gt; querySpec.QueryString(
-  				queryString =&gt; queryString.DefaultField(post =&gt; post.Body).Query(query))));
+    public async Task&lt;PagedResult&lt;IndexedPost&gt;&gt; FindPostsAsync(string query, int pageIndex)
+    {
+    	// Use a circuit breaker to make the indexer operation more resistent against problems.
+    	// When this operation fails three times, we stop for a minute before trying again.
+    	return await CircuitBreaker.ExecuteAsync(async () =&gt; {
+    		// Important: For easy search, stick to the query_string operator.
+    		// This will automatically convert your query string into terms and search for them.
+    		// Doing this manually is possible, but a more difficult to do.
+    		var results = await _client.SearchAsync&lt;IndexedPost&gt;(searchRequest =&gt; searchRequest
 
-			return new PagedResult&lt;IndexedPost&gt; {
-				Items = results.Documents,
-				PageSize = 30,
-				PageIndex = pageIndex,
-				Total = results.Total
-			};
-		});
+.Index(&quot;weblog&quot;)
+.Type(&quot;post&quot;)
+.From(pageIndex \* 30)
+.Take(30)
+.Query(querySpec =&gt; querySpec.QueryString(
+queryString =&gt; queryString.DefaultField(post =&gt; post.Body).Query(query))));
 
-	}
+    		return new PagedResult&lt;IndexedPost&gt; {
+    			Items = results.Documents,
+    			PageSize = 30,
+    			PageIndex = pageIndex,
+    			Total = results.Total
+    		};
+    	});
+
+    }
+
 }
 </code></pre>
+
 <p>Again you will start out with a basic ElasticClient setup. After that you can start<br>
 to search for content using the SearchAsync method. This method accepts a generic argument<br>
 which tells the ElasticClient class how the search results <code>_source</code> property should be deserialized. When you search for content in ElasticSearch it will return a set of basic<br>

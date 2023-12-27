@@ -1,9 +1,10 @@
 ---
 title: Learn how automatically tag images with the Computer Vision API
 category: Machine Learning
-datePublished: '2018-05-08'
-dateCreated: '2018-05-08'
+datePublished: "2018-05-08"
+dateCreated: "2018-05-08"
 ---
+
 <!--kg-card-begin: markdown--><p>In the past years I've worked on quite a number of machine learning and deep learning models. I know my way around Python, Data Science, CUDA and other stuff that comes along with a job in AI.</p>
 <p>However if you're a regular developer who doesn't care about building your own models, but feel that AI could solve some important problems for you, what do you do?</p>
 <p>It turns out that there are quite a few tools that allow you to solve problems with AI without actually learning anything about machine learning.</p>
@@ -48,6 +49,7 @@ dateCreated: '2018-05-08'
 
 var results = await visionClient.AnalyzeImageAsync(imageStream, imageFeatures);
 </code></pre>
+
 <p>In the sample above we asked the vision API for a description and a set of tags. Other options for image analysis are:</p>
 <ul>
 <li>Color - The dominant color and accent colors</li>

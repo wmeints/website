@@ -3,9 +3,10 @@ title: >-
   Are open source large language models the future? Let's find out with an
   example
 category: Machine Learning
-datePublished: '2023-12-18'
-dateCreated: '2023-12-17'
+datePublished: "2023-12-18"
+dateCreated: "2023-12-17"
 ---
+
 Since the introduction of GPT-3.5 there’s been a race in the open-source community to come up with models that match the
 performance of the models produced by OpenAI. The main reason behind this race is that many people feel that it’s not a
 good idea to use the models produced by OpenAI. There are three main arguments as to why:

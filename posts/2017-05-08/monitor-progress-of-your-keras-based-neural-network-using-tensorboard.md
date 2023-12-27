@@ -1,11 +1,14 @@
 ---
 title: Monitor progress of your Keras based neural network using Tensorboard
 category: Machine Learning
-datePublished: '2017-05-08'
-dateCreated: '2017-07-31'
+datePublished: "2017-05-08"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>In the past few weeks I've been breaking my brain over a way to automatically answer questions<br>
+
 using a neural network. I have a working version, but debugging a neural network is a nightmare.</p>
+
 <p>Neural networks by their very nature are hard to reason about. You can't really find out how<br>
 or why something happened in a neural network, because they are too complex for that. Also,<br>
 there's a real art to selecting the right number of layers, the right number of neurons per layers<br>
@@ -38,6 +41,7 @@ model.compile(optimizer='sgd', loss='categorical_cross_entropy')
 
 model.fit(x_train, y_train, verbose=1)
 </code></pre>
+
 <p>This neural network is compiled with a standard Gradient Descent optimizer and a Categorical Cross Entropy loss function.<br>
 Finally the network is trained using a labelled dataset.</p>
 <p>When you run this code you will find that nothing appears on screen and there's no way to know how well things are going.<br>
@@ -60,6 +64,7 @@ tensorboard = TensorBoard(log_dir=&quot;logs/{}&quot;.format(time()))
 
 model.fit(x_train, y_train, verbose=1, callbacks=[tensorboard])
 </code></pre>
+
 <p>You need to create a new <code>TensorBoard</code> instance and point it to a log directory where data should be collected.<br>
 Next you need to modify the <code>fit</code> call so that it includes the tensorboard callback.</p>
 <h2 id="monitoringprogress">Monitoring progress</h2>

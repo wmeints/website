@@ -1,12 +1,15 @@
 ---
-title: 'So you are a technical evangelist, what does it even mean?'
+title: "So you are a technical evangelist, what does it even mean?"
 category: Developers life
-datePublished: '2016-02-08'
-dateCreated: '2017-07-31'
+datePublished: "2016-02-08"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>When I started developing software at thirteen I dreamed of architecting big software systems.<br>
+
 I really wanted to build cool stuff with my computer, although I could only program a little bit<br>
 of QBasic back then.</p>
+
 <p>18 years later I am building big systems, but I haven't exactly reached my goal. Of course I<br>
 design my fair share of big pieces of architectures, but I'm not an architect.</p>
 <p>Here's why. Quickly after I discovered programming I also discovered my love for doing new things.<br>

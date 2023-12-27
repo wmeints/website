@@ -3,9 +3,10 @@ title: >-
   What to learn if you want to become a Microsoft certified machine learning
   engineer
 category: Machine Learning
-datePublished: '2018-06-25'
-dateCreated: '2018-06-25'
+datePublished: "2018-06-25"
+dateCreated: "2018-06-25"
 ---
+
 <!--kg-card-begin: markdown--><p>Last week I received a question through LinkedIn about the new Machine Learning certification that Microsoft offers. His question was: &quot;Do you have some interesting resources to prepare myself for the MCSA machine learning certification&quot;. Yes, I do have those and some of them are free.</p>
 <p>In this article I will explain what you can expect from the exam and how to prepare for the kind of questions Microsoft will ask in the exam.</p>
 <h2 id="overview">Overview</h2>

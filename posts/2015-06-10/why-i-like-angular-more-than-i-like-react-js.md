@@ -1,9 +1,10 @@
 ---
 title: Why I like Angular more than I like React.JS
 category: Web development
-datePublished: '2015-06-10'
-dateCreated: '2017-07-31'
+datePublished: "2015-06-10"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Last week Lieke Boon (@Lieke2208) on twitter asked what people liked best, Angular or React. Good question, which deserved an honest answer from my side.</p>
 <!-- more -->
 <blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr"><a  href="https://twitter.com/Lieke2208">@Lieke2208</a> weird, but I like <a href="https://twitter.com/hashtag/angularjs?src=hash">#angularjs</a> better. Mixing html and js is weird and wrong if you ask me. It gets messy.</p>&mdash; Willem Meints (@willem_meints) <a href="https://twitter.com/willem_meints/status/608191127074820096">June 9, 2015</a></blockquote>
@@ -44,8 +45,10 @@ Or you could use plain javascript classes and jQuery to talk to the backend. Whi
           &lt;/ul&gt;
         );
     }
+
 });
 </code></pre>
+
 <p>You can render this component on the page, by invoking the following code:</p>
 <pre><code>React.render(&lt;PeopleList/&gt;, document.findElementById(&quot;my-placeholder&quot;));
 </code></pre>
@@ -106,8 +109,10 @@ to javascript you will get syntax that looks like this:</p>
 
         return react.createElement(&quot;ul&quot;,null,people);
     }
+
 });
 </code></pre>
+
 <p>JSX is a good find when you think of the amount of work you need to do to build DOM elements by hand.<br>
 But there are a few things that I definitely don't like about this approach.</p>
 <p>First there are no editors that support the syntax well. Most editors break or don't over any syntax highlighting<br>

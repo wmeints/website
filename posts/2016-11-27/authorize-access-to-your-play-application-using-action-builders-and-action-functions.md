@@ -3,11 +3,14 @@ title: >-
   Authorize access to your Play application using action builders and action
   functions
 category: Scala
-datePublished: '2016-11-27'
-dateCreated: '2017-07-31'
+datePublished: "2016-11-27"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>When you think about Scala web applications you’re probably thinking Play. This framework to me is the de facto standard for<br>
+
 building web applications in Scala. It offers a great set of features that make it really easy to build web applications.</p>
+
 <p>The framework looks very similar to Rails and ASP.NET Core. I think it has the great things of both and adds more on top of<br>
 that by enabling Akka actors and a functional programming style that I find more logical to use these days.</p>
 <p>One thing that ASP.NET Core and other frameworks have that Play doesn’t have is a proper set of authorization classes<br>
@@ -38,12 +41,13 @@ derives from ActionBuilder. In the sample I’ve gone for the LoggedAction defin
 <pre><code class="language-scala">import play.Logger;
 
 object LoggedAction extends ActionBuilder[Request] {
-  override def invokeBlock[A](request: Request[A], block: (Request[A]) =&gt; Future[Result]): Future[Result] = {
-    Logger.debug(s&quot;Received request for ${request.path}&quot;)
-    block(request)
-  }
+override def invokeBlock[A](request: Request[A], block: (Request[A]) =&gt; Future[Result]): Future[Result] = {
+Logger.debug(s&quot;Received request for ${request.path}&quot;)
+block(request)
+}
 }
 </code></pre>
+
 <p>The action builder has a method called invokeBlock. It gets a block and the request. It should return a Future[Result].</p>
 <p>The action builder implementation for a logged action is rather simple. Grab a logger and write a message to it.<br>
 After we’ve done that, continue the execution of the original block.</p>
@@ -75,18 +79,20 @@ I like this style since it tells you straight up what you can expect to see in y
 <p>The implementation of the action builder is as follows. When a principal can be found on the request the code in the provided block should be executed<br>
 with a request object that provides access to the current user. If a user cannot be found, the result should be the login page.</p>
 <pre><code class="language-scala">trait AuthorizationSupport extends Controller {
-  def authorizationHandler: AuthorizationHandler 
+  def authorizationHandler: AuthorizationHandler
 
-  object AuthenticatedAction extends ActionBuilder[RequestWithPrincipal] {
-    override def invokeBlock[A](request: Request[A], block: (RequestWithPrincipal[A]) =&gt; Future[Result]): Future[Result] = {
-      def unauthorizedAction = authorizationHandler.unauthorized(RequestWithOptionalPrincipal(None, request))
-      def authorizedAction(principal: Principal) = block(RequestWithPrincipal(principal, request))
+object AuthenticatedAction extends ActionBuilder[RequestWithPrincipal] {
+override def invokeBlock[A](request: Request[A], block: (RequestWithPrincipal[A]) =&gt; Future[Result]): Future[Result] = {
+def unauthorizedAction = authorizationHandler.unauthorized(RequestWithOptionalPrincipal(None, request))
+def authorizedAction(principal: Principal) = block(RequestWithPrincipal(principal, request))
 
-      authorizationHandler.principal(request).fold(unauthorizedAction)(authorizedAction)  
+      authorizationHandler.principal(request).fold(unauthorizedAction)(authorizedAction)
     }
-  }
+
+}
 }
 </code></pre>
+
 <p>The fragment above determines the current principal using an authorization handler implementation that you need to provide to the AuthorizationSupport trait.<br>
 I’ve opted for this so that the logic to determine the current principal is not in the controller itself. Imagine that you have twenty controllers all<br>
 duplicating this logic. That’s not very maintainable. I’ve done the same with the logic to show the login page when the user is not authenticated so that<br>
@@ -103,15 +109,16 @@ but with an additional principal property.</p>
 <pre><code class="language-scala">import play.api.mvc.{Request, WrappedRequest}
 
 object RequestWithPrincipal {
-  def apply[A](principal: Principal, request: Request[A]): RequestWithPrincipal[A] = {
-    new RequestWithPrincipal(principal, request)
-  }
+def apply[A](principal: Principal, request: Request[A]): RequestWithPrincipal[A] = {
+new RequestWithPrincipal(principal, request)
+}
 }
 
 class RequestWithPrincipal[A](val principal: Principal, request: Request[A]) extends WrappedRequest[A](request) {
 
 }
 </code></pre>
+
 <p>You can use the action builder in your controller by calling the AuthenticatedAction action builder. The code block that comes directly after<br>
 that is supplied with a RequestWithPrincipal instance so you can make use of the current principal.</p>
 <pre><code class="language-scala">class MyController @Inject() (authorizationHandler: AuthorizationHandler) extends Controller with AuthorizationSupport {
@@ -168,14 +175,15 @@ the original action should be executed.</p>
   
   // ...
 
-  def authorizeUsingPolicy(policy: AuthorizationPolicy): ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] = 
-    new ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] {
-      override protected def refine[A](request: RequestWithPrincipal[A]): Future[Either[Result, RequestWithPrincipal[A]]] = {
-        //TODO: Insert your code here.
-      }
-    }
+def authorizeUsingPolicy(policy: AuthorizationPolicy): ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] =
+new ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] {
+override protected def refine[A](request: RequestWithPrincipal[A]): Future[Either[Result, RequestWithPrincipal[A]]] = {
+//TODO: Insert your code here.
+}
+}
 }
 </code></pre>
+
 <p>The above code demonstrates the basic structure of the authorizeUsingPolicy action refiner. I’ve defined it as a method<br>
 so that I can inject an authorization policy which is going to perform the actual access check.</p>
 <p>The action refiner returns a Future of either a Result or a Request. If you return a Left(Result) this means that the action should<br>
@@ -188,18 +196,19 @@ gets the access denied page.</p>
   
   // ...
 
-  def authorizeUsingPolicy(policy: AuthorizationPolicy): ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] = 
-    new ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] {
-      override protected def refine[A](request: RequestWithPrincipal[A]): Future[Either[Result, RequestWithPrincipal[A]]] = {
-        if(!policy.allowed(request)) {
-          authorizationHandler.denied(request).map(Left(_))
-        } else {
-          //TODO: Allow action to continue
-        }
-      }
-    }
+def authorizeUsingPolicy(policy: AuthorizationPolicy): ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] =
+new ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] {
+override protected def refine[A](request: RequestWithPrincipal[A]): Future[Either[Result, RequestWithPrincipal[A]]] = {
+if(!policy.allowed(request)) {
+authorizationHandler.denied(request).map(Left(\_))
+} else {
+//TODO: Allow action to continue
+}
+}
+}
 }
 </code></pre>
+
 <p>I’m using the AuthorizationHandler implementation from earlier to achieve the desired effect. Remember, this is to make the code<br>
 more reusable across my controllers.</p>
 <p>If authorization policy check was successful we need to return Right(SomeRequest) so that the original action is executed.</p>
@@ -208,18 +217,19 @@ more reusable across my controllers.</p>
   
   // ...
 
-  def authorizeUsingPolicy(policy: AuthorizationPolicy): ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] = 
-    new ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] {
-      override protected def refine[A](request: RequestWithPrincipal[A]): Future[Either[Result, RequestWithPrincipal[A]]] = {
-        if(!policy.allowed(request)) {
-          authorizationHandler.denied(request).map(Left(_))
-        } else {
-          Future.successful(Right(request))
-        }
-      }
-    }
+def authorizeUsingPolicy(policy: AuthorizationPolicy): ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] =
+new ActionRefiner[RequestWithPrincipal, RequestWithPrincipal] {
+override protected def refine[A](request: RequestWithPrincipal[A]): Future[Either[Result, RequestWithPrincipal[A]]] = {
+if(!policy.allowed(request)) {
+authorizationHandler.denied(request).map(Left(\_))
+} else {
+Future.successful(Right(request))
+}
+}
+}
 }
 </code></pre>
+
 <p>You can combine the authorizeUsingPolicy action function with the AuthenticatedAction action builder to complete the authorization pipeline:</p>
 <pre><code class="language-scala">class MyController @Inject() (val authorizationHandler: AuthorizationHandler, myPolicy: CustomPolicy) extends Controller with AuthorizationSupport {
   def myAction = (AuthenticatedAction andThen authorizeUsingPolicy(myPolicy)) { implicit request =&gt;

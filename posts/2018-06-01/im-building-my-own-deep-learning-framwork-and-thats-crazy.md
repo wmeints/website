@@ -1,9 +1,10 @@
 ---
 title: I'm building my own deep learning framework and that's crazy
 category: Machine Learning
-datePublished: '2018-06-01'
-dateCreated: '2018-06-01'
+datePublished: "2018-06-01"
+dateCreated: "2018-06-01"
 ---
+
 <!--kg-card-begin: markdown--><p>I've embarked on my hardest and most fun adventure ever. I'm going to implement my own deep learning framework. I know most people will call me crazy. But I think this is a challenge that was long coming and I finally got around to it. Wonder why? Read on.</p>
 <h2 id="waitwhatwhy">Wait, what, why?!</h2>
 <p>So why on earth would I implement my own deep learning framework? There are plenty of good frameworks available in Python and even in C# there are implementations that work good enough. For one thing, Keras is an awesome framework that you simply can't replicate in a few days.</p>
@@ -25,6 +26,7 @@ network.Train(features,labels);
 
 float[][] output = network.Predict(sample);
 </code></pre>
+
 <p>Sounds simple enough. But there are a few constraints that I have put in place:</p>
 <ul>
 <li>I want to use CNTK and Tensorflow to implement the internals of the neural network. Simply because they've done all the work with GPU access and what-not.</li>

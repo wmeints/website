@@ -1,12 +1,15 @@
 ---
 title: How to build a remote temperature sensor with ReactivePI
 category: Scala
-datePublished: '2015-10-12'
-dateCreated: '2017-07-31'
+datePublished: "2015-10-12"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Working with hardware on any platform involves working with a low-level programming language<br>
+
 and a huge amount of constants that have weird values. That's at least how I remember building my first<br>
 hardware/software interface.</p>
+
 <p>Today this isn't much better. I love the raspberry PI and the fact that I can run Java applications on it.<br>
 But what I absolutely dislike is the fact that I still have to write C programs in order to access the hardware interfaces.<br>
 If you want to use the I2C bus on your Raspberry PI you have two choices: Use the python programming language or resort<br>
@@ -38,36 +41,37 @@ import akka.actor.{ActorLogging, Props, ActorRef, Actor}
 import scala.concurrent.ExecutionContext
 
 object TemperatureMonitor {
-  case object GetCurrentTemperature
+case object GetCurrentTemperature
 
-  def props(sensor: ActorRef) = Props(new TemperatureMonitor(sensor))
+def props(sensor: ActorRef) = Props(new TemperatureMonitor(sensor))
 }
 
 class TemperatureMonitor(sensor: ActorRef) extends Actor with ActorLogging {
 
-  import TemperatureMonitor._
-  import scala.concurrent.duration._
+import TemperatureMonitor._
+import scala.concurrent.duration._
 
-  implicit val ec:ExecutionContext = context.system.dispatcher
+implicit val ec:ExecutionContext = context.system.dispatcher
 
-  context.system.scheduler.schedule(0 seconds,
-    5 seconds,self, GetCurrentTemperature)
+context.system.scheduler.schedule(0 seconds,
+5 seconds,self, GetCurrentTemperature)
 
-  def receive = {
-    case GetCurrentTemperature =&gt; loadTemperatureData()
-    case TemperatureSensor.SensorData(temperature) =&gt;
-      displayTemperatureData(temperature)
-  }
+def receive = {
+case GetCurrentTemperature =&gt; loadTemperatureData()
+case TemperatureSensor.SensorData(temperature) =&gt;
+displayTemperatureData(temperature)
+}
 
-  private def loadTemperatureData() = {
-    sensor ! TemperatureSensor.GetActualTemperature
-  }
+private def loadTemperatureData() = {
+sensor ! TemperatureSensor.GetActualTemperature
+}
 
-  private def displayTemperatureData(temperature:Int) = {
-    log.info(s&quot;The current temperature is $temperature&quot;)
-  }
+private def displayTemperatureData(temperature:Int) = {
+log.info(s&quot;The current temperature is $temperature&quot;)
+}
 }
 </code></pre>
+
 <p>When the monitor is asked for the temperature it will send a message to the connected<br>
 sensor asking it to measure the current temperature. When the sensor has the data<br>
 available it will send a message back to the monitor.</p>
@@ -85,62 +89,65 @@ import nl.fizzylogic.reactivepi.i2c.Convert
 
 object TemperatureSensor {
 
-  case object GetActualTemperature
+case object GetActualTemperature
 
-  case class SensorData(temperature: Int)
+case class SensorData(temperature: Int)
 
-  def props: Props = Props[TemperatureSensor]
+def props: Props = Props[TemperatureSensor]
 }
 
 class TemperatureSensor extends Actor with ActorLogging {
 
-  import TemperatureSensor._
+import TemperatureSensor.\_
 
-  // The adafruit MCP9808 sensor is configured to work on address 0x18.
-  // You can change this on the device itself by pulling one or more address pins to 3.3V
-  val sensor = I2C(1).device(0x18)
+// The adafruit MCP9808 sensor is configured to work on address 0x18.
+// You can change this on the device itself by pulling one or more address pins to 3.3V
+val sensor = I2C(1).device(0x18)
 
-  // The ambient temperature register can be read to retrieve the current temperature.
-  val MCP9808_REG_AMBIENT_TEMP: Byte = 0x05
+// The ambient temperature register can be read to retrieve the current temperature.
+val MCP9808_REG_AMBIENT_TEMP: Byte = 0x05
 
-  var originalSender: ActorRef = null
+var originalSender: ActorRef = null
 
-  def receive = idle
+def receive = idle
 
-  def waitingForSensorData: Receive = {
-    case I2C.Data(buffer) =&gt; sendSensorData(buffer)
-  }
+def waitingForSensorData: Receive = {
+case I2C.Data(buffer) =&gt; sendSensorData(buffer)
+}
 
-  def idle: Receive = {
-    case GetActualTemperature =&gt; loadTemperatureData()
-  }
+def idle: Receive = {
+case GetActualTemperature =&gt; loadTemperatureData()
+}
 
-  private def loadTemperatureData() = {
-    log.info(&quot;Received request for the temperature&quot;)
+private def loadTemperatureData() = {
+log.info(&quot;Received request for the temperature&quot;)
 
     context.become(waitingForSensorData)
 
     originalSender = sender
     sensor ! I2C.Read(MCP9808_REG_AMBIENT_TEMP, 2)
-  }
 
-  private def sendSensorData(buffer: Array[Byte]) = {
-    originalSender ! SensorData(translateTemperature(buffer))
-    context.become(idle)
-  }
+}
 
-  private def translateTemperature(buffer: Array[Byte]): Int = {
-    val wordData = Convert.wordToInt16(buffer)
-    val temperature = Math.round((wordData &amp; 0x0FFF) / 16.0).asInstanceOf[Int]
+private def sendSensorData(buffer: Array[Byte]) = {
+originalSender ! SensorData(translateTemperature(buffer))
+context.become(idle)
+}
+
+private def translateTemperature(buffer: Array[Byte]): Int = {
+val wordData = Convert.wordToInt16(buffer)
+val temperature = Math.round((wordData &amp; 0x0FFF) / 16.0).asInstanceOf[Int]
 
     if ((wordData &amp; 0x1000) != 0x00) {
       temperature - 256
     } else {
       temperature
     }
-  }
+
+}
 }
 </code></pre>
+
 <p>The temperature sensor accepts a <code>GetActualTemperature</code> message. When it receives this message<br>
 it will load the temperature data from the MCP9808 sensor (Which is connected to the I2C bus).</p>
 <p>To read data from the temperature sensor device the <code>TemperatureSensor</code> actor opens the first I2C bus<br>
@@ -160,10 +167,11 @@ to the monitor.</p>
 <pre><code class="language-scala">class Program extends App {
   val actorSystem = ActorSystem(&quot;temperature-monitor&quot;)
 
-  val sensor = actorSystem.actorOf(TemperatureSensor.props, &quot;temperature-sensor&quot;)
-  val monitor = actorSystem.actorOf(TemperatureMonitor.props(sensor), &quot;temperature-monitor&quot;)  
+val sensor = actorSystem.actorOf(TemperatureSensor.props, &quot;temperature-sensor&quot;)
+val monitor = actorSystem.actorOf(TemperatureMonitor.props(sensor), &quot;temperature-monitor&quot;)  
 }
 </code></pre>
+
 <p>When you compile this application on your Raspberry PI you will see temperature data<br>
 scrolling slowly over your screen.</p>
 <h2 id="addingakkaremoteactorstomakeitawesome">Adding Akka Remote Actors to make it awesome</h2>
@@ -176,8 +184,8 @@ without actually starting any actor. Just make sure that the actor system is up 
 <pre><code class="language-scala">import akka.actor.ActorSystem
 
 object Program extends App {
-  val parser = new scopt.OptionParser[StartupOptions](&quot;temperature-monitor&quot;) {
-    head(&quot;monitor&quot;, &quot;0.1&quot;)
+val parser = new scopt.OptionParser[StartupOptions]("temperature-monitor") {
+head(&quot;monitor&quot;, &quot;0.1&quot;)
 
     // Specify a run mode (client or server)
     opt[String]('m',&quot;mode&quot;) action { (x,c) =&gt;
@@ -192,11 +200,12 @@ object Program extends App {
         success
       }
     })
-  }
 
-  parser.parse(args, StartupOptions()) match {
-    case Some(options) =&gt;
-      val actorSystem = ActorSystem(&quot;temperature-monitor&quot;)
+}
+
+parser.parse(args, StartupOptions()) match {
+case Some(options) =&gt;
+val actorSystem = ActorSystem(&quot;temperature-monitor&quot;)
 
       // When the application is run in monitor mode, it will try to access the
       // temperature sensor on the raspberry PI.
@@ -205,9 +214,11 @@ object Program extends App {
         val monitor = actorSystem.actorOf(TemperatureMonitor.props(sensor), &quot;temperature-monitor&quot;)
       }
     case None =&gt;
-  }
+
+}
 }
 </code></pre>
+
 <p>I added a commandline option parser. The parser itself is a whole different story, but for this application it adds the possibility to pass in the -m option.<br>
 This sets the application either in sensor or monitor mode. In sensor mode only the actor system is started. When the application is started in monitor mode,<br>
 the monitor as well as the sensor are started.</p>

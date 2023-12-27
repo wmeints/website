@@ -1,14 +1,17 @@
 ---
-title: 'How to write ATDD tests with cucumber-js, protractor and typescript'
+title: "How to write ATDD tests with cucumber-js, protractor and typescript"
 category: Typescript
-datePublished: '2016-10-14'
-dateCreated: '2017-07-31'
+datePublished: "2016-10-14"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>ATDD (Acceptance Test Driven Development) has been around for a while now.<br>
+
 I use it quite a lot on projects that I work on.<br>
 It helps me and others translate requirements into automated tests with the minimum amount<br>
 of ceremony. We can talk to users about what they want and write that down in a format that<br>
 they understand and we can automate.</p>
+
 <p>One of the ways in which I use ATDD is with AngularJS. There is an end-to-end testing<br>
 tool for AngularJS called Protractor that supports writing ATDD tests using a testframework<br>
 called cucumber-js. It works pretty well with just javascript, but since we use Typescript<br>
@@ -86,8 +89,10 @@ against the various supported browsers such as IE, Chrome and FireFox.</p>
     // This setting tells protractor to wait for all apps
     // to load on the page instead of just the first.
     useAllAngular2AppRoots: true
+
 }
 </code></pre>
+
 <p>The file should point to the feature files in your project. I put those in the <code>features</code><br>
 folder, but you can place them somewhere else if you like. Next you need to set the framework<br>
 to custom and point protractor to the cucumber-js framework using the frameworkPath setting.</p>
@@ -141,14 +146,15 @@ the typescript interface from <code>ts-node</code> it is capable of loading the 
 
 @binding()
 class MyStepDefinitions {
-  @given(/^I have a user account (.*) with password (.*)$/)
-  givenIHaveAUserAccount(username:string, password:string): void {
-      //TODO: Do something useful
-  }
+@given(/^I have a user account (._) with password (._)$/)
+givenIHaveAUserAccount(username:string, password:string): void {
+//TODO: Do something useful
+}
 }
 
 export = MyStepDefinitions;
 </code></pre>
+
 <p>This looks way easier to read and I can assure you it's much more ergonomic to write.<br>
 And luckely it is not much work to set up in the end.</p>
 <!--kg-card-end: markdown-->

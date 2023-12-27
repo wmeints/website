@@ -1,11 +1,14 @@
 ---
 title: Quickly deploy a Play application to Azure websites
 category: Web development
-datePublished: '2016-01-12'
-dateCreated: '2017-07-31'
+datePublished: "2016-01-12"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Coming from .NET I've always liked Azure for its simplicity. I takes no more<br>
+
 than 5 minutes to run a ASP.NET web application on Azure.</p>
+
 <p>I figured: Why isn't that possible for Java too? Turns out it is possible<br>
 and not that hard to get up and running. And although I tried it with a Play<br>
 application most of the steps are the same for other kinds of Java application.</p>
@@ -35,9 +38,10 @@ name := &quot;frontend&quot;
 version := &quot;1.0&quot;
 
 lazy val `frontend` = (project in file(&quot;.&quot;)).enablePlugins(PlayScala)
-  .settings(Play2WarPlugin.play2WarSettings: _*)
-  .settings(Play2WarKeys.servletVersion := &quot;3.1&quot;)
+.settings(Play2WarPlugin.play2WarSettings: \_\*)
+.settings(Play2WarKeys.servletVersion := &quot;3.1&quot;)
 </code></pre>
+
 <p>Add the import for the plugin at the top and include the settings<br>
 as part of the project definition.</p>
 <p>You're now ready to deploy the web app to Azure. Run the following command to<br>

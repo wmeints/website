@@ -1,9 +1,10 @@
 ---
 title: Learn how to build a bot with the new Microsoft Bot Builder Java SDK
 category: Chatbots
-datePublished: '2018-05-21'
-dateCreated: '2018-05-19'
+datePublished: "2018-05-21"
+dateCreated: "2018-05-19"
 ---
+
 <!--kg-card-begin: markdown--><p>Bot builder from Microsoft has been around for a couple of years now. During <a href="https://www.microsoft.com/en-us/build">Build 2018</a> a preview of version 4.0 was launched with support for more languages. Previously you could only build a bot in C# or Node. Now you can build one in Java or Python too.</p>
 <p>In this post I will take you on a short tour through the Java version of this framework and show you how it works and what you can expect in the near future.</p>
 <h2 id="gettingthelibraries">Getting the libraries</h2>
@@ -159,8 +160,10 @@ dateCreated: '2018-05-19'
 
         return key;
     }
+
 }
 </code></pre>
+
 <p>Despite the fact that the HTTP servlet performs a basic task, it still contains a lot of code to go through. So let's break it down, step by step.</p>
 <p>The class itself derives from <code>HttpServlet</code> a standard class that any web application on a Java web server needs to derive from.</p>
 <p>Incoming chat activities are sent to the bot using POST requests. So you need to override the <code>doPost</code> method. This method has a request and response object.</p>
@@ -185,83 +188,87 @@ public interface ChatBot {
     void handle(ConversationContext context);
 }
 
-/**
- * Chatbot implementation
- */
-public final class ChatBotImpl implements ChatBot {
+/\*\*
 
-    /**
-     * Handles incoming chatbot activities
-     *
-     * @param context Context for the current conversation
-     */
-    @Override
-    public void handle(ConversationContext context) {
-        if (context.activity().type().equals(ActivityTypes.MESSAGE)) {
-            Activity reply = ActivityFactory.createReply(context.activity(), context.activity().text());
-            context.sendActivity(reply);
-        }
-    }
-}
-</code></pre>
-<p>When the bot receives an activity that is a message, it will take that message and create a reply for it. It then copies the user message into the reply and sends it using the bot connector client.</p>
-<p>Notice that right now, Bot Builder for Java doesn't have the right convinience methods for creating replies to incoming messages. So I took the liberty of looking at the C# source code and created my own <code>ActivityFactory</code> to solve the problem.</p>
-<pre><code class="language-java">/**
- * Factory class to produce various activities
- */
-public final class ActivityFactory {
-    /**
-     * Creates a new instance of {@link ActivityFactory}
-     */
-    private ActivityFactory() {
+- Chatbot implementation
+  \*/
+  public final class ChatBotImpl implements ChatBot {
 
-    }
+      /**
+       * Handles incoming chatbot activities
+       *
+       * @param context Context for the current conversation
+       */
+      @Override
+      public void handle(ConversationContext context) {
+          if (context.activity().type().equals(ActivityTypes.MESSAGE)) {
+              Activity reply = ActivityFactory.createReply(context.activity(), context.activity().text());
+              context.sendActivity(reply);
+          }
+      }
 
-    /**
-     * Creates a reply for an activity
-     *
-     * @param activity Activity to create a reply for
-     * @param text     Text for the reply
-     * @return Returns the new activity
-     */
-    public static Activity createReply(Activity activity, String text) {
-        Activity reply = new Activity();
+  }
+  </code></pre>
+  <p>When the bot receives an activity that is a message, it will take that message and create a reply for it. It then copies the user message into the reply and sends it using the bot connector client.</p>
+  <p>Notice that right now, Bot Builder for Java doesn't have the right convinience methods for creating replies to incoming messages. So I took the liberty of looking at the C# source code and created my own <code>ActivityFactory</code> to solve the problem.</p>
+  <pre><code class="language-java">/**
 
-        reply.withFrom(activity.recipient())
-             .withRecipient(activity.from())
-             .withConversation(activity.conversation())
-             .withChannelId(activity.channelId())
-             .withReplyToId(activity.id())
-             .withServiceUrl(activity.serviceUrl())
-             .withTimestamp(new DateTime())
-             .withType(ActivityTypes.MESSAGE);
+- Factory class to produce various activities
+  _/
+  public final class ActivityFactory {
+  /\*\*
+  _ Creates a new instance of {@link ActivityFactory}
+  \*/
+  private ActivityFactory() {
 
-        if (text != null &amp;&amp; !text.isEmpty()) {
-            reply.withText(text);
-        }
+      }
 
-        return reply;
-    }
-}
-</code></pre>
-<p>When you want to send an activity, you need to create one based on the one you received earlier. The incoming activity always contains a <code>serviceUrl</code> property that contains the URL to send any outgoing activities to.</p>
-<p>Also, when you create a reply, you need to specify to which conversation and user you want to send the reply. In my implementation I simply switch the <code>from</code> and <code>recipient</code> property.</p>
-<p>Once you created a reply, you can send it through the bot connector client. To make things easy, the <code>ConversationContext</code> contains a convinience method that handles sending activities.</p>
-<p>The <code>sendActivity</code> method looks like this:</p>
-<pre><code class="language-java">public void sendActivity(Activity activity) {
-    try {
-        connector.conversations().sendToConversation(activity.conversation().id(), activity);
-    } catch(ErrorResponseException ex) {
-        logger.log(Level.SEVERE, &quot;Failed to deliver activity to channel&quot;, ex);
-    }
-}
-</code></pre>
-<h2 id="theresmoretocome">There's more to come</h2>
-<p>As you can see, it doesn't take a mountain of code to build a bot with the current preview version of Bot Builder for Java. But there are quite a few things missing still.</p>
-<p>You could build a complete bot with the bits that are available. The connector bits are easy enough to handle. You can focus on the conversation structure.</p>
-<p>In the next few months, Microsoft will keep working on adding more features to the Bot Builder for Java SDK. For example, in C# you can already build simple dialogs. This will come to Java as well.</p>
-<p>Also, there's no easy way to perform intent detection. This will also be added in a future preview. Right now you can use a basic HTTP client implementation in Java <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-get-started-java-get-intent">o cess LUIS (Language Understanding Intelligence Service)</a> as a REST service. I expect that there will be a proper client for it soon.</p>
-<h2 id="wheredoifindthebits">Where do I find the bits?</h2>
-<p>You can find the sample code for this post on Github: <a href="https://github.com/wmeints/qna-bot">https://github.com/wmeints/qna-bot</a></p>
-<p>If you're interested in Bot Builder for Java, it's open source. Also on Github: <a href="https://github.com/microsoft/botbuilder-java/">https://github.com/microsoft/botbuilder-java/</a></p>
-<!--kg-card-end: markdown-->
+      /**
+       * Creates a reply for an activity
+       *
+       * @param activity Activity to create a reply for
+       * @param text     Text for the reply
+       * @return Returns the new activity
+       */
+      public static Activity createReply(Activity activity, String text) {
+          Activity reply = new Activity();
+
+          reply.withFrom(activity.recipient())
+               .withRecipient(activity.from())
+               .withConversation(activity.conversation())
+               .withChannelId(activity.channelId())
+               .withReplyToId(activity.id())
+               .withServiceUrl(activity.serviceUrl())
+               .withTimestamp(new DateTime())
+               .withType(ActivityTypes.MESSAGE);
+
+          if (text != null &amp;&amp; !text.isEmpty()) {
+              reply.withText(text);
+          }
+
+          return reply;
+      }
+
+  }
+  </code></pre>
+  <p>When you want to send an activity, you need to create one based on the one you received earlier. The incoming activity always contains a <code>serviceUrl</code> property that contains the URL to send any outgoing activities to.</p>
+  <p>Also, when you create a reply, you need to specify to which conversation and user you want to send the reply. In my implementation I simply switch the <code>from</code> and <code>recipient</code> property.</p>
+  <p>Once you created a reply, you can send it through the bot connector client. To make things easy, the <code>ConversationContext</code> contains a convinience method that handles sending activities.</p>
+  <p>The <code>sendActivity</code> method looks like this:</p>
+  <pre><code class="language-java">public void sendActivity(Activity activity) {
+      try {
+          connector.conversations().sendToConversation(activity.conversation().id(), activity);
+      } catch(ErrorResponseException ex) {
+          logger.log(Level.SEVERE, &quot;Failed to deliver activity to channel&quot;, ex);
+      }
+  }
+  </code></pre>
+  <h2 id="theresmoretocome">There's more to come</h2>
+  <p>As you can see, it doesn't take a mountain of code to build a bot with the current preview version of Bot Builder for Java. But there are quite a few things missing still.</p>
+  <p>You could build a complete bot with the bits that are available. The connector bits are easy enough to handle. You can focus on the conversation structure.</p>
+  <p>In the next few months, Microsoft will keep working on adding more features to the Bot Builder for Java SDK. For example, in C# you can already build simple dialogs. This will come to Java as well.</p>
+  <p>Also, there's no easy way to perform intent detection. This will also be added in a future preview. Right now you can use a basic HTTP client implementation in Java <a href="https://docs.microsoft.com/en-us/azure/cognitive-services/luis/luis-get-started-java-get-intent">o cess LUIS (Language Understanding Intelligence Service)</a> as a REST service. I expect that there will be a proper client for it soon.</p>
+  <h2 id="wheredoifindthebits">Where do I find the bits?</h2>
+  <p>You can find the sample code for this post on Github: <a href="https://github.com/wmeints/qna-bot">https://github.com/wmeints/qna-bot</a></p>
+  <p>If you're interested in Bot Builder for Java, it's open source. Also on Github: <a href="https://github.com/microsoft/botbuilder-java/">https://github.com/microsoft/botbuilder-java/</a></p>
+  <!--kg-card-end: markdown-->

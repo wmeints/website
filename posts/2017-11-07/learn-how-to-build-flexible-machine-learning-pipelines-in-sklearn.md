@@ -1,9 +1,10 @@
 ---
 title: Learn how to build flexible machine learning pipelines in scikit-learn
 category: Machine Learning
-datePublished: '2017-11-07'
-dateCreated: '2017-11-06'
+datePublished: "2017-11-07"
+dateCreated: "2017-11-06"
 ---
+
 <!--kg-card-begin: markdown--><p>Setting up a machine learning algorithm involves more than the algorithm itself. You need to preprocess the data in order for it to fit the algorithm. It's this preprocessing pipeline that often requires a lot of work. Building a flexible pipeline is key. Here's how you can build it in python.</p>
 <h2 id="scikitlearnaveryclevertoolkit">scikit-learn, a very clever toolkit</h2>
 <p>There are many machine learning packages for Python. One of the is <a href="http://scikit-learn.org">scikit-learn</a> otherwise known as sklearn on pip. This toolkit contains many machine learning algorithms and preprocessing tools.</p>
@@ -24,10 +25,11 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 
 pipeline = Pipeline(steps=[
-  ('vectorize', CountVectorizer()),
-  ('classify', DecisionTreeClassifier())
+('vectorize', CountVectorizer()),
+('classify', DecisionTreeClassifier())
 ])
 </code></pre>
+
 <p>Each pipeline has a number of steps, which is defined as a list of tuples. The first element in the tuple is the name of the step in the pipeline. The second element of the tuple is the transformer.</p>
 <p>The final step in the pipeline is the estimator. The estimator can be a classifier, regression algorithm, a neural network or even some unsupervised algorithm.</p>
 <p>To train the estimator at the end of the pipeline you have to call the method fit on the pipeline and provide the data to train on.</p>
@@ -36,12 +38,14 @@ raw_labels = [0, 1]
 
 pipeline.fit(raw_features, raw_labels)
 </code></pre>
+
 <p>Because you're using a pipeline you can put in raw data, which gets preprocessed automatically by the pipeline before running it through the estimator for training.</p>
 <p>When you've trained the estimator in the pipeline you can use it to predict an outcome through the <code>predict</code> method.</p>
 <pre><code class="language-python">sample_sentence = ['Hi world']
 
 outcome = pipeline.predict(sample_sentence)
 </code></pre>
+
 <p>When predicting an outcome the pipeline preprocesses the data before running it through the estimator to predict the outcome.</p>
 <p>That's the power of using a pipeline. You don't have to worry about differences in preprocessing between training and prediction. It is automatically done for you.</p>
 <h2 id="buildingyourowncustomtransforms">Building your own custom transforms</h2>
@@ -50,12 +54,13 @@ outcome = pipeline.predict(sample_sentence)
 <pre><code class="language-python">from sklearn.base import TransformerMixin
 
 class MyCustomStep(TransformerMixin):
-  def transform(X, **kwargs):
-    pass
-    
-  def fit(X, y=None, **kwargs):
-    return self
+def transform(X, \*\*kwargs):
+pass
+
+def fit(X, y=None, \*\*kwargs):
+return self
 </code></pre>
+
 <p>A pipeline component is defined as a <code>TransformerMixin</code> derived class with three important methods:</p>
 <ul>
 <li>fit - Uses the input data to train the transformer</li>
@@ -77,6 +82,7 @@ class MyCustomStep(TransformerMixin):
 grid_search = GridSearchCV(pipeline, param_grid=param_grid)
 grid_search.fit(features, labels)
 </code></pre>
+
 <p>First you need to define a set of parameters that you want to try out with the grid search. The parameters are defined as follows. You prefix each parameter with the name of the step in the pipeline. You can append two underscores and then name the parameter on the component you want to modify. Finally you add a list of values that you want to test.</p>
 <p>Notice that the <code>param_grid</code> is a list of dictionaries. You can test more than one scenario with different parametersets if you want.</p>
 <p>After you've define the parameters for the grid search you feed those together with the pipeline to a new instance of the <code>GridSearchCV</code> class.</p>
@@ -91,15 +97,16 @@ grid_search.fit(features, labels)
 <pre><code class="language-python">from sklearn.base import TransformerMixin
 
 class MyCustomStep(TransformerMixin):
-  def transform(X, **kwargs):
-    pass
-    
-  def fit(X, y=None, **kwargs):
-    return self
-    
-  def get_params(**kwargs):
-    return { }
+def transform(X, \*\*kwargs):
+pass
+
+def fit(X, y=None, \*\*kwargs):
+return self
+
+def get_params(\*\*kwargs):
+return { }
 </code></pre>
+
 <p>The <code>get_params</code> method returns the trainable parameters for your pipeline component. If you have any parameters that you want to be modified by the grid search, this is the place to add them.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>I think you will agree with me that the grid search functionality is a nice addon and a must if you're trying to find ways to make your machine learning models better.</p>

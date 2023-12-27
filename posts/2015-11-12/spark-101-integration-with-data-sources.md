@@ -1,13 +1,16 @@
 ---
 title: Spark 101 - Integration with data sources
 category: Scala
-datePublished: '2015-11-12'
-dateCreated: '2017-07-31'
+datePublished: "2015-11-12"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>In the previous post I showed you how to build basic Spark programs. Building a basic<br>
+
 Spark application is the hello world scenario of Spark. Normally you'd use something<br>
 like a database to feed your algorithm in Spark and output the results of the<br>
 algorithm somewhere else.</p>
+
 <p>But what can you connect to Spark and where do you leave the outputs of your program?</p>
 <p>In this post I will show you some of the options you have to integrate your<br>
 Spark program with data sources. Hopefully you will slowly start to see where<br>
@@ -43,6 +46,7 @@ SparkContext and SQLContext.</p>
 val sc = new SparkContext(config)
 val sqlContext = new SQLContext(sc)
 </code></pre>
+
 <p>The only thing you need to put into the SQL context is the SparkContext. This context<br>
 is used for coordination purposes.</p>
 <p>After you created the SQL context you can start to load data. This looks like this:</p>
@@ -54,14 +58,15 @@ val sc = new SparkContext(config)
 val sqlContext = new SQLContext(sc)
 
 val ds = sqlContext.read.format(&quot;jdbc&quot;).options(
-  Map(
-    &quot;url&quot; -&gt; &quot;jdbc:mysql://localhost:3306/mydb&quot;,
-    &quot;dbtable&quot; -&gt; &quot;customers&quot;,
-    &quot;partitionColumn&quot; -&gt; &quot;country&quot;,
-    &quot;driver&quot; -&gt; &quot;com.mysql.jdbc.Driver&quot;
-  )
+Map(
+&quot;url&quot; -&gt; &quot;jdbc:mysql://localhost:3306/mydb&quot;,
+&quot;dbtable&quot; -&gt; &quot;customers&quot;,
+&quot;partitionColumn&quot; -&gt; &quot;country&quot;,
+&quot;driver&quot; -&gt; &quot;com.mysql.jdbc.Driver&quot;
+)
 ).load()
 </code></pre>
+
 <p>The <code>SQLContext</code> is asked to read data in the JDBC format. As input for this method<br>
 you need to provide a map containing a JDBC URL and driver name. This is used to<br>
 set up the connection with the database. You also need to provide the name of the table<br>
@@ -129,6 +134,7 @@ new streaming context like this:</p>
 val sc = new SparkContext(config)
 val ssc = new StreamingContext(sc, Seconds(1))
 </code></pre>
+
 <p>The first parameter for the <code>StreamingContext</code> constructor is the <code>SparkContext</code><br>
 to use. The second parameter determines the duration for the batch.</p>
 <p>What happens in Spark streaming is that the program listens for events on a stream<br>
@@ -153,9 +159,10 @@ thing you need for building semi-streaming big data appliances.</p>
   Map(&quot;events&quot; -&gt; 1))
 
 val counter = kafkaStream.map({ case(key,message) =&gt; Person.fromMessage(message) })
-  .filter(person =&gt; person.name.startsWith(&quot;Mike&quot;))
-  .count()
+.filter(person =&gt; person.name.startsWith(&quot;Mike&quot;))
+.count()
 </code></pre>
+
 <p>In the sample code you first create a new Kafka stream instance to read from.<br>
 I specified three Kafka server hosts to connect to. This is something you can do<br>
 when you want to make sure that the connection between Kafka and Spark stays available<br>

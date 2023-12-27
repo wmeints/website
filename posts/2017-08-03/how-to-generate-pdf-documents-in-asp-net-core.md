@@ -1,9 +1,10 @@
 ---
 title: How to generate PDF documents in ASP.NET Core
 category: ASP.NET
-datePublished: '2017-08-03'
-dateCreated: '2017-08-03'
+datePublished: "2017-08-03"
+dateCreated: "2017-08-03"
 ---
+
 <!--kg-card-begin: markdown--><p>A customer I work for wants to generate a set of attachments for an e-mail we need to send to the clients of that customer. We're using .NET Core and I figured: &quot;That can't be hard, or at least it shouldn't be hard&quot;. Turns out it is more work than expected, but also more fun than expected. We ended up using DinkToPdf with the ASP.NET Core Razor Template Engine to build a PDF generation microservice.</p>
 <p>In this post I will show you how we made the microservice to generate PDF attachments with DinkToPdf.</p>
 <h2 id="thefirststepapdfgenerationlibrary">The first step: A PDF generation library</h2>
@@ -19,17 +20,18 @@ dateCreated: '2017-08-03'
 <p>Next you have to write a small piece of code for the PDF generation process:</p>
 <pre><code class="language-csharp">string documentContent = &quot;...&quot;;
 
-var output = _pdfConverter.Convert(new HtmlToPdfDocument()
+var output = \_pdfConverter.Convert(new HtmlToPdfDocument()
 {
-    Objects =
-    {
-        new ObjectSettings()
-        {
-            HtmlContent = documentContent
-        }
-    }
+Objects =
+{
+new ObjectSettings()
+{
+HtmlContent = documentContent
+}
+}
 });
 </code></pre>
+
 <p>The output is the rendered PDF bytes. You can send this to the user from a ASP.NET Core controller using the following logic:</p>
 <pre><code class="language-csharp">[HttpGet]
 [Route(&quot;/api/some-document&quot;)]
@@ -51,17 +53,18 @@ public IActionResult GenerateSomeDocument()
 <pre><code class="language-csharp">string documentContent = await _templateService.RenderTemplateAsync(
     &quot;Templates/MyDocument&quot;, vm);
 
-var output = _pdfConverter.Convert(new HtmlToPdfDocument()
+var output = \_pdfConverter.Convert(new HtmlToPdfDocument()
 {
-    Objects =
-    {
-        new ObjectSettings()
-        {
-            HtmlContent = documentContent
-        }
-    }
+Objects =
+{
+new ObjectSettings()
+{
+HtmlContent = documentContent
+}
+}
 });
 </code></pre>
+
 <h2 id="linksandresources">Links and resources</h2>
 <p>Want to know more about DinkToPdf? You can find the project over on Github: <a href="https://github.com/rdvojmoc/DinkToPdf">https://github.com/rdvojmoc/DinkToPdf</a></p>
 <!--kg-card-end: markdown-->

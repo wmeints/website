@@ -1,13 +1,16 @@
 ---
 title: ASP.NET Core debugging tips for Visual Studio Code
 category: .NET
-datePublished: '2016-11-22'
-dateCreated: '2017-07-31'
+datePublished: "2016-11-22"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>These days I run a Windows laptop with Visual Studio on it, but at home I<br>
+
 still have a great Mac Machine purring away in my home office. I like that<br>
 machine since it has a huge display (27 inches) and I find Mac OS still better<br>
 to use then Windows.</p>
+
 <p>From time to time I like to work on a side project on my Mac. These days I'm<br>
 building a small web application to keep track of session proposals I sent out.<br>
 I'm building this using ASP.NET Core and Visual Studio Code.</p>

@@ -1,9 +1,10 @@
 ---
 title: How to quickly build a REST API in Django
 category: Python
-datePublished: '2017-12-31'
-dateCreated: '2017-12-31'
+datePublished: "2017-12-31"
+dateCreated: "2017-12-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Vacation time, an excellent time to learn something new, so I figured, why not build a recipe bot that recommends recipes? For that I needed a way to store recipes that the bot could retrieve. And I figured, why not try to build that in Python?</p>
 <p>In this article I will show you a quick way to build a REST API in Python using the Django framework. I will also show you some of the things that I ran into while building the REST API so you don't have to get caught up in those kind of problems.</p>
 <h2 id="gettingstarted">Getting started</h2>
@@ -59,22 +60,23 @@ dateCreated: '2017-12-31'
 <pre><code class="language-python">from django.db import models
 
 class Recipe(models.Model):
-    name = models.CharField(max_length=150)
-    description = models.TextField()
-    cooking_instructions = models.TextField()
-    slug = models.SlugField()
-    preparation_time = models.IntegerField(help_text='Preparation time in minutes')
-    cooking_time = models.IntegerField(help_text='Cooking time in minutes')
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
-    
+name = models.CharField(max_length=150)
+description = models.TextField()
+cooking_instructions = models.TextField()
+slug = models.SlugField()
+preparation_time = models.IntegerField(help_text='Preparation time in minutes')
+cooking_time = models.IntegerField(help_text='Cooking time in minutes')
+created = models.DateTimeField()
+modified = models.DateTimeField()
+
 class Ingredient(models.Model):
-    name = models.CharField(max_length=150)
-    amount = models.IntegerField()
-    measurement = models.CharField(max_length=150)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
-        related_name='ingredients')
+name = models.CharField(max_length=150)
+amount = models.IntegerField()
+measurement = models.CharField(max_length=150)
+recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
+related_name='ingredients')
 </code></pre>
+
 <p>There's quite a few things happening in this code, so let's go over them one by one.</p>
 <h3 id="defineamodel">Define a model</h3>
 <p>You define a model as a python class, which derives from <code>django.db.Model</code>. The model can have several properties. For example, name and description are properties on the model.</p>
@@ -90,29 +92,33 @@ class Ingredient(models.Model):
 from . import models
 
 def recipe_list(request):
-    result = []
-    
+result = []
+
     for recipe in Recipe.objects.all():
         result.append({ 'name': recipe.name, 'slug': recipe.slug })
-        
+
     return JsonResponse(result)
+
 </code></pre>
+
 <p>This function takes the incoming request as argument. It retrieves recipes, which it returns in a <code>JsonResponse</code>.</p>
 <p>Django has so called manager objects attached to the model classes you create that allow you to execute SQL queries. The <code>all()</code> query returns all objects of a given type from the database.</p>
 <p>To use the <code>recipe_list</code> view you need to include it in the <code>urls.py</code> of the project. You can do this by creating a new file <code>urls.py</code> within the app.</p>
 <pre><code class="language-python">from django.urls import path
 
 urlpatterns = [
-    path('recipes', views.recipe_list)
+path('recipes', views.recipe_list)
 ]
 </code></pre>
+
 <p>Next include the urls from the <code>api</code> app in the main project using the following piece of code in the <code>urls.py</code> of the project:</p>
 <pre><code class="language-python">from django.urls import path, include
 
 urlpatterns = [
-    path('api', include('api.urls'))
+path('api', include('api.urls'))
 ]
 </code></pre>
+
 <p>This tells the project to include all urls from the <code>api</code> app under the path <code>/api/</code>. Ultimately when you get an url like <code>/api/recipes</code> the <code>recipes_list</code> function gets called by Django to render the response.</p>
 <p>Notice that the Django URL dispatcher doesn't distinguish between GET, POST or PUT when calling a function that is attached to a URL. You need to do that yourself.</p>
 <p>This amounts to a lot of boilerplate code when trying to build a REST API with Django. Because one function has to handle POST and GET.</p>
@@ -144,18 +150,19 @@ urlpatterns = [
 from . import models
 
 class IngredientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Recipe
-        fields = ('name', 'amount', 'measurement')
+class Meta:
+model = models.Recipe
+fields = ('name', 'amount', 'measurement')
 
 class RecipeSerializer(serializers.ModelSerializer):
-    ingredients = IngredientSerializer(many=True, read_only=True)
-    class Meta:
-        model = models.Recipe
-        fields = ('slug', 'name', 'description', 'cooking_instructions',
-            'cooking_time', 'preparation_time',
-            'created', 'modified')
+ingredients = IngredientSerializer(many=True, read_only=True)
+class Meta:
+model = models.Recipe
+fields = ('slug', 'name', 'description', 'cooking_instructions',
+'cooking_time', 'preparation_time',
+'created', 'modified')
 </code></pre>
+
 <p>Derive your serializer from <code>ModelSerializer</code>. A serializer needs a nested class <code>Meta</code> which defines meta behavior for the serializer. The serializer needs to know about your model, so assign the property model with the name of the model that the serializer is for. Next define the fields that the serializer should serialize or deserialize.</p>
 <p>When you use <code>ModelSerializer</code> with the right <code>Meta</code> class definition, you will get the definition of how each field in the model should be processed for free. In the <code>RecipeSerializer</code> however you need to define the ingredients property explicitly.</p>
 <p>The <code>ingredients</code> property won't get serialized by default, because it's a reverse relation lookup of the foreign key in <code>Ingredient</code>. If you want the ingredients to be included in the recipe you need to tell the serializer that.</p>
@@ -168,9 +175,10 @@ from . import serializers
 from . import models
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.RecipeSerializer
-    queryset = models.Recipe.objects.all()
+serializer_class = serializers.RecipeSerializer
+queryset = models.Recipe.objects.all()
 </code></pre>
+
 <p>A viewset contains all logic required to handle POST, PUT, PATCH, DELETE and GET requests. You don't need to build all that boilerplate when you use a viewset.</p>
 <p>Notice that I called the <code>all()</code> method on the Recipe manager object. The return type of this method is a lazy queryset. It doesn't really retrieve anything until I iterate over it. That's why you can call it here and assign its result to the queryset.</p>
 <p>The <code>queryset</code> is used in the various request handling methods within the viewset. This works, because you can call create, save and destroy on the queryset to manipulate the data.</p>
@@ -186,9 +194,10 @@ router = routers.DefaultRouter()
 router.register('recipes', views.RecipeViewSet)
 
 urlpatterns = [
-    path('', include(router.urls))
+path('', include(router.urls))
 ]
 </code></pre>
+
 <p>First you create a new instance of <code>DefaultRouter</code> and register the recipes path with it using the <code>RecipeViewSet</code>.</p>
 <p>After you've setup the router you can include its urls in the urlpatterns with the <code>include</code> statement that we've used before to include the <code>api</code> urls in the project urlpatterns.</p>
 <h2 id="runyourapplication">Run your application</h2>
@@ -208,36 +217,37 @@ urlpatterns = [
 <p>I wanted to return a short summary of each recipe when the user requests <code>/api/recipes/</code> url, but a full recipe when the user requests <code>/api/recipes/1</code>.</p>
 <p>It turns out to be quite easy to show a summary in a list versus the full model in a details action.</p>
 <p>Remember, the viewset has a property serializer_class. We used it earlier to setup a serializer for the viewset. You can also use the get_serializer_class method instead. In this method you can simply ask for the action that is being executed and return a different serializer:</p>
-<pre><code class="language-python">from rest_framework import viewsets 
+<pre><code class="language-python">from rest_framework import viewsets
 
 from . import views
 from . import models
 
-
 class RecipeViewSet(viewsets.ModelViewSet):
-    queryset = models.Recipe.objects.all()
+queryset = models.Recipe.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.RecipeSummarySerializer
 
         return serializers.RecipeSerializer
+
 </code></pre>
+
 <h3 id="howtouseasluginsteadoftechnicalidforlookups">How to use a slug instead of technical ID for lookups</h3>
 <p>Technical IDs are perfect for uniquely identifying objects in the database. They are a nightmare when you're building something that needs to be used by humans.</p>
 <p>To solve the problem you can inslude a <code>SlugField</code> in your model and use that as a lookup field in the viewset. Notice that I had one in my <code>Recipe</code> model already.</p>
 <p>Now to use it in a viewset, simply set the <code>lookup_field</code> property on the viewset:</p>
-<pre><code class="language-python">from rest_framework import viewsets 
+<pre><code class="language-python">from rest_framework import viewsets
 
 from . import views
 from . import models
 
-
 class RecipeViewSet(viewsets.ModelViewSet):
-    queryset = models.Recipe.objects.all()
-    serializer_class = serializers.RecipeSerializer
-    lookup_field = 'slug'
+queryset = models.Recipe.objects.all()
+serializer_class = serializers.RecipeSerializer
+lookup_field = 'slug'
 </code></pre>
+
 <p>This extra step makes the API much more friendly towards humans. While still keeping the technical ID in the database.</p>
 <h2 id="finalthoughts">Final thoughts</h2>
 <p>Django with the Django Rest Framework is a great combination for building REST APIs, they've put quite a bit of effort into reducing the amount of boilerplate.</p>

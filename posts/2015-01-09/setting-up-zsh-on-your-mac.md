@@ -1,13 +1,16 @@
 ---
 title: Setting up ZSH on your mac
 category: Productivity
-datePublished: '2015-01-09'
-dateCreated: '2017-07-31'
+datePublished: "2015-01-09"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>A few years back I started using a Mac at home for general computing and<br>
+
 editing my photographs. I didn't look back at my Windows computer. Windows 8 is sort of meh<br>
 and the Mac hardware just works as opposed to my last PC that failed at least once every<br>
 year.</p>
+
 <p>Now that I've used my Mac for a few years I am discovering even more about it that's great.<br>
 One of the things I've found that is also great about the Mac is that it has a unix shell.<br>
 Unix shell implementations are the best around, no matter what you use on there. Windows took<br>

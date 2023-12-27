@@ -1,11 +1,12 @@
 ---
 title: How-to clean up your Docker Desktop and reclaim that diskspace
 category: Docker
-datePublished: '2022-09-19'
-dateCreated: '2022-09-19'
+datePublished: "2022-09-19"
+dateCreated: "2022-09-19"
 ---
-My laptop ran out of space this morning. I had noticed some slowness last week, 
-but I attributed that to some weird experiment I was running on Kubernetes. 
+
+My laptop ran out of space this morning. I had noticed some slowness last week,
+but I attributed that to some weird experiment I was running on Kubernetes.
 This morning, however, I received some rather alarming error messages from
 Windows that it couldn't write log files and other temp things.
 
@@ -24,13 +25,13 @@ Run the following command with Docker Desktop running:
 docker system prune -a
 ```
 
-This removes any old images, networks, volumes, etc. from your Docker 
-installation. In my case I got a whopping 57GB back with this operation. 
+This removes any old images, networks, volumes, etc. from your Docker
+installation. In my case I got a whopping 57GB back with this operation.
 Let's just say that it's been a while since I last checked.
 
 Removing the cruft from Docker Desktop doesn't help much though without the next
 step. Docker Desktop uses a VHDX file to store its items on and you'll only
-remove files from that virtual hard drive. 
+remove files from that virtual hard drive.
 
 After you've removed the files from the VHDX, you're going to need to shrink
 the VHDX file too.
@@ -54,7 +55,7 @@ optimize-vhd C:\users\<account-name>\appdata\local\docker\wsl\data\ext4.vhdx -mo
 
 Make sure to replace `<account-name>` with the account name you're using in Windows.
 
-Note that it will take a while to shrink the VHDX file. 
+Note that it will take a while to shrink the VHDX file.
 
 ## Summary
 
@@ -62,6 +63,6 @@ After garbage collecting my docker files and shrinking the VHDX, I went from a
 134GB file to a 36GB file for my Docker Desktop installation. Much better!
 
 It goes without saying that making a backup of your files is a good idea before
-running things in an administrative prompt. Don't say I didn't warn you! 
+running things in an administrative prompt. Don't say I didn't warn you!
 
 Enjoy your freed diskspace.

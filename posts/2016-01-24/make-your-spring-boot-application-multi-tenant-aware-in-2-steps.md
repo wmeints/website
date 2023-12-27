@@ -1,12 +1,15 @@
 ---
 title: Make your Spring Boot application multi-tenant aware in 2 steps
 category: Java
-datePublished: '2016-01-24'
-dateCreated: '2017-07-31'
+datePublished: "2016-01-24"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Building a micro service using Spring Boot is quite a lot better than building<br>
+
 everything by hand. But when you want to do something different it's a bit like<br>
 eating mcDonalds. It's fast and easy, but not very good for you :-)</p>
+
 <p>I ran into this kind of situation when I tried to add multi-tenant support to my<br>
 micro service that was build in Spring Boot.</p>
 <p>Multi-tenant support is important to me. Our team runs <a href="http://www.isknownow.com/">knowNow</a> a knowledge management<br>
@@ -49,8 +52,10 @@ public class OrderController {
 
         return ResponseEntity.ok(newOrder);
     }
+
 }
 </code></pre>
+
 <p>It uses a repository to store the order information and return the order object to the client when the operation is completed.<br>
 Nothing special here as you might have expected already.</p>
 <p>Now to modify this controller to allow for tenant selection through the <code>X-TenantID</code> HTTP header.</p>
@@ -68,8 +73,10 @@ public class OrderController {
 
         return ResponseEntity.ok(newOrder);
     }
+
 }
 </code></pre>
+
 <p>All you need to do to allow for tenant selection is to get the tenant identifier from the HTTP request<br>
 using the <code>GetRequestHeader</code> annotation combined with an extra parameter for the method.</p>
 <p>After you got the information from the request you need to store it somewhere where the rest of the application<br>
@@ -88,8 +95,10 @@ different thread in the service you won't confuse the tenant information between
     public static Object getCurrentTenant() {
         return currentTenant.get();
     }
+
 }
 </code></pre>
+
 <p>With these two components modified you're ready to convert the rest of the service.</p>
 <h2 id="step2convertthedataaccesscomponents">Step 2: Convert the data access components</h2>
 <p>The whole multi-tenant thing leans on the correct use of the TenantContext class.<br>
@@ -199,8 +208,10 @@ public class MultitenantConfiguration {
 
         return dataSourceBuilder.build();
     }
+
 }
 </code></pre>
+
 <p>There's a lot to take in here. In order to use the custom data source you need to create a method<br>
 in the configuration class called <code>dataSource</code>. This method returns a new instance of the<br>
 <code>MultitenantDataSource</code> configured using a set of properties files loaded from the tenants folder.</p>

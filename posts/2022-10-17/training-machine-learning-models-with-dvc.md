@@ -1,9 +1,10 @@
 ---
 title: Training machine-learning models with DVC
 category: Machine Learning
-datePublished: '2022-10-17'
-dateCreated: '2022-10-17'
+datePublished: "2022-10-17"
+dateCreated: "2022-10-17"
 ---
+
 In [my previous post][PREV_POST] I showed how to use DVC to manage data for your
 machine-learning project. Today it's time to take things to the next level.
 Let's build a pipeline to train a machine-learning model with DVC.
@@ -32,8 +33,8 @@ You can find the code for the sample on [Github][DEMO_CODE].
 
 We use two scripts to train the model:
 
-* `src/prepare.py` - Extracts the features from the raw dataset and cleans the data.
-* `src/train.py` - Trains the model based on the extracted features and stores the trained model on disk.
+- `src/prepare.py` - Extracts the features from the raw dataset and cleans the data.
+- `src/train.py` - Trains the model based on the extracted features and stores the trained model on disk.
 
 It's not a overly complicated project, but enough to get a feel for how DVC works.
 Make sure to download the sources if you want to follow along with the post.
@@ -46,7 +47,7 @@ a couple of steps that need to be performed before we have a working
 machine-learning model.
 
 This is where data pipelines come into play. DVC allows the use of stages to
-combine several steps into a data pipeline. 
+combine several steps into a data pipeline.
 
 Each step is implemented as a shell command. For each step you can define
 dependencies and outputs. When one step depends on the output of another step,
@@ -58,7 +59,7 @@ Here's how to set up a pipeline.
 ### Adding the source dataset
 
 Before we can add the stages to the pipeline, we need to make sure DVC knows
-about the source data. Download the [sample dataset][DATASET] and save it as 
+about the source data. Download the [sample dataset][DATASET] and save it as
 `data/raw/wachtijden.csv` in the project.
 
 Next, run the following command to add the dataset to DVC:
@@ -78,7 +79,7 @@ For the first step in the pipeline we need to execute the following command:
 dvc stage add prepare -d data/raw/wachttijden.csv -d src/prepare.py -o data/intermediate/wachttijden.csv python src/prepare.py data/raw/wachttijden.csv data/intermediate/wachttijden.csv
 ```
 
-The `dvc stage add` command needs a set of dependencies specified with `-d`. 
+The `dvc stage add` command needs a set of dependencies specified with `-d`.
 We've provided the input dataset as a dependency. We also provide the the
 prepare script as a dependency. When one of these files changes, we want
 the stage to be invalidated.
@@ -98,7 +99,7 @@ This stage looks similar to the previous stage. We've added an additional
 parameter: `-m metrics.json`. We use this to keep track of metrics generated
 as part of the training script.
 
-Note that the training script needs to store the metrics as a dictionary in 
+Note that the training script needs to store the metrics as a dictionary in
 `metrics.json` for DVC to pick the metrics up.
 
 The following code demonstrates how to save the metrics:
@@ -136,7 +137,7 @@ dvc exp show
 ```
 
 Fun fact, DVC will version the generated model for you. So whenever you feel the need, you can go back to
-a previous model that you've trained with the matching dataset version. 
+a previous model that you've trained with the matching dataset version.
 
 ## Summary
 
@@ -145,8 +146,8 @@ The pipeline feature in DVC just makes sense when you're building machine-learni
 In my previous post I mentioned that the data versioning with GIT is awesome.
 But it turns out that's not all. When you use pipelines you can version your models too.
 
-It's nice to see that they've thought about reproducability. Whenever a step is unchanged, 
-DVC skips that steps saving you time. 
+It's nice to see that they've thought about reproducability. Whenever a step is unchanged,
+DVC skips that steps saving you time.
 
 So far, DVC has been a great pleasure to work with. Hope that you've enjoyed this
 article too.

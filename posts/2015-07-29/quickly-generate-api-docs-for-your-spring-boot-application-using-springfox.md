@@ -1,12 +1,15 @@
 ---
 title: Quickly generate API docs for your Spring Boot application using Springfox
 category: Java
-datePublished: '2015-07-29'
-dateCreated: '2017-07-31'
+datePublished: "2015-07-29"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>While working on one of the micro services that we're adding to knowNow I ran into an issue with documentation.<br>
+
 In order for my teammates to quickly get up and going with the new service I needed some way to provide them<br>
 with the documentation. Preferrably something that they can use to generate code from.</p>
+
 <p>Since it's 2015 that means using <a href="http://swagger.io">Swagger</a>, a documentation format for REST services that describes the methods and<br>
 models in your service in a JSON format. Together with Swagger UI you get a documentation format that is<br>
 machine readable AND human readable. It also supports experimenting with the API, which is a big plus if you ask me.</p>
@@ -23,10 +26,11 @@ by spring. To create this class you first need two dependencies in your project:
 }
 
 dependencies {
-  compile(&quot;io.springfox:springfox-swagger2:2.1.1&quot;)
-  compile(&quot;io.springfox:springfox-swagger-ui:2.1.1&quot;)  
+compile(&quot;io.springfox:springfox-swagger2:2.1.1&quot;)
+compile(&quot;io.springfox:springfox-swagger-ui:2.1.1&quot;)  
 }
 </code></pre>
+
 <p>For those of you that still use maven, check the docs here for information on <a href="http://springfox.github.io/springfox/docs/current/#dependencies">how to add the<br>
 dependencies in Maven</a>.</p>
 <p>After you have added the new dependencies to your project you need to add a new class<br>
@@ -43,20 +47,20 @@ import springfox.documentation.spring.web.plugins.ApiSelectorBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.UiConfiguration;
 
-import static springfox.documentation.builders.PathSelectors.*;
+import static springfox.documentation.builders.PathSelectors.\*;
 
 @Configuration
 public class ApiDocumentationConfiguration {
-    @Bean
-    public Docket documentation() {
-        return new Docket()
-          .select()
-            .apis(RequestHandlerSelectors.any())
-            .paths(regex(&quot;/api/.*&quot;))
-            .build()
-          .pathMapping(&quot;/&quot;)
-          .apiInfo(metadata());
-    }
+@Bean
+public Docket documentation() {
+return new Docket()
+.select()
+.apis(RequestHandlerSelectors.any())
+.paths(regex(&quot;/api/.\*&quot;))
+.build()
+.pathMapping(&quot;/&quot;)
+.apiInfo(metadata());
+}
 
     @Bean
     public UiConfiguration uiConfig() {
@@ -71,8 +75,10 @@ public class ApiDocumentationConfiguration {
         .contact(&quot;my-email@domain.org&quot;)
         .build();
     }
+
 }
 </code></pre>
+
 <p>The configuration class contains one bean for the actual API documentation.<br>
 The Docklet instance created contains some bits that make the swagger documentation tick.</p>
 <p>The first thing you want to do is to filter the API endpoints being document using the  <code>select()</code> operation.<br>

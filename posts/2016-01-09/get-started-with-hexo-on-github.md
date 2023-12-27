@@ -1,12 +1,15 @@
 ---
 title: Get started with Hexo on Github
 category: Web development
-datePublished: '2016-01-09'
-dateCreated: '2017-07-31'
+datePublished: "2016-01-09"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>&quot;My weblog is getting pretty old&quot; was the first thing I thought when I tried to update it to the<br>
+
 latest technology. And it's true, I've started my weblog on community server, moved it to wordpress,<br>
 tried to run it on Ghost and finally made the move to static HTML with Octopress.</p>
+
 <p>The final move to a static HTML website has provided me with the best experience<br>
 so far. If you can afford to mess with HTML, Markdown and CSS than generating a weblog<br>
 based on markdown and some templates is by far the most flexible and most performant way<br>

@@ -1,12 +1,13 @@
 ---
 title: How to build a game with Unity - Part 2
 category: Unity
-datePublished: '2022-08-03'
-dateCreated: '2022-08-03'
+datePublished: "2022-08-03"
+dateCreated: "2022-08-03"
 ---
+
 Welcome to this series of blog posts about building a game with Unity.
 In this series we're going to explore a fun vacation project that my son and I
-worked on in summer 2022. 
+worked on in summer 2022.
 
 In this blogpost we'll discuss basic 2D level design using tilemaps and
 tilesets. We'll cover the following topics:
@@ -23,11 +24,11 @@ Let's get started by learning about 2D tile-based levels in Unity.
 
 There are numerous options to build levels in Unity. One of them is using a
 tile-based approach. Building a level using tiles is a nice technique when
-you're building a 2D game. 
+you're building a 2D game.
 
 Tile-based levels use tiles to build the structures in the level. A tile is
 made out of an image called a sprite. The sprite image is loaded from a larger
-image called a tile palette. 
+image called a tile palette.
 
 Since you typically need only one tile palette to build a level, you're going
 to save on performance as the game engine only needs to load one image to build
@@ -37,8 +38,8 @@ Let's start working on a tile-based level by creating a tileset first.
 
 ## Creating a tile palette
 
-Before you can create a tile-based level in unity, you'll need to set up 
-tile palette. 
+Before you can create a tile-based level in unity, you'll need to set up
+tile palette.
 
 For this post, we're going to assume that you have [the Sprout land asset
 package][ASSET_PACKAGE] on your machine.
@@ -48,39 +49,39 @@ Let's start by importing an image that will be part of our tile palette.
 ### Importing the resources for the tileset
 
 First, unpack the Sprout Land asset package on your machine.
-In the Sprout land asset package you'll find a folder called *Tilesets*
+In the Sprout land asset package you'll find a folder called _Tilesets_
 which contains a number of tilesets to work with. We're going to get started
-with *Grass.png*.
+with _Grass.png_.
 
 Let's import the grass image into the project:
 
-1. Right click in the *Project* window and select *Create -> Folder*. 
-2. Name the new folder *Resources*.
-3. Open the *Resources* folder in the project window and right click. Choose *Import new asset*.
-4. Browse to where you unpacked the assets package and choose the file *Tilesets\Grass.png*.
+1. Right click in the _Project_ window and select _Create -> Folder_.
+2. Name the new folder _Resources_.
+3. Open the _Resources_ folder in the project window and right click. Choose _Import new asset_.
+4. Browse to where you unpacked the assets package and choose the file _Tilesets\Grass.png_.
 
-You should now have the grass tileset in your project window under *Resources*.
+You should now have the grass tileset in your project window under _Resources_.
 Next, we need to convert the image into a tile palette.
 
 ### Converting the image to a tileset
 
-To convert the imported grass image into a tile palette, select it in 
-the *Project* window.
+To convert the imported grass image into a tile palette, select it in
+the _Project_ window.
 
-When you've selected the image in the *Project* window, the inspector shows you
+When you've selected the image in the _Project_ window, the inspector shows you
 the properties of the Grass image.
 
 ![Inspector window showing the texture properties](/content/images/2022/08/03/inspector-window.png)
 
 There are a couple of properties that are worth mentioning here:
 
-* Texture type: Shows you how the image is used. You can use images as textures
+- Texture type: Shows you how the image is used. You can use images as textures
   for 3D objects, normal maps, 2D sprites, and a number of other ways. Since
   we're building a 2D project, it will show as a 2D sprite.
-* Sprite mode: This will tell you how the image is used. When the sprite mode is
-  set to *single* you can use the image as a single sprite in the game. When the
-  sprite mode is set to *multiple* you can use parts of the image as a sprite.
-* Pixels per unit: This determines how many pixels per element are used in the 
+- Sprite mode: This will tell you how the image is used. When the sprite mode is
+  set to _single_ you can use the image as a single sprite in the game. When the
+  sprite mode is set to _multiple_ you can use parts of the image as a sprite.
+- Pixels per unit: This determines how many pixels per element are used in the
   image. If you created an image that is meant as a 16x16 sprite you'll want to
   set the value to 16. If you're sprites that are larger, you'll have to
   configure a different value here. For images containing multiple sprites you
@@ -88,8 +89,8 @@ There are a couple of properties that are worth mentioning here:
 
 To create a good tile palette, we'll need to configure the following properties:
 
-* *Sprite mode*: Multiple
-* *Pixels per unit*: 16
+- _Sprite mode_: Multiple
+- _Pixels per unit_: 16
 
 A tile palette contains multiple tiles, so we need to cut out multiple sprites
 from the image. The image is made out of 16x6 cells for the different tile
@@ -104,14 +105,14 @@ After configuring the image, we can slice the image into individual tiles.
 
 Follow these steps to slice the images in the sprite editor:
 
-1. Click the *Sprite Editor* button in the inspector window.
-2. In the sprite editor window, click the *Slice* menu item.
-3. From the *Type* dropdown, select *Grid by cell size*
-4. Enter the value 16 for *X* and *Y*
+1. Click the _Sprite Editor_ button in the inspector window.
+2. In the sprite editor window, click the _Slice_ menu item.
+3. From the _Type_ dropdown, select _Grid by cell size_
+4. Enter the value 16 for _X_ and _Y_
 5. Click the slice button.
 
-You'll end up with the image being sliced as shown in the image above. 
-Once you've sliced the image, you can click on the *Apply* button in the top
+You'll end up with the image being sliced as shown in the image above.
+Once you've sliced the image, you can click on the _Apply_ button in the top
 right corner of the Window to save the changes.
 
 ### Creating the tile palette
@@ -121,27 +122,27 @@ these sprites for a number of things. For example, you can use them to create
 animations or stateful objects in the game.
 
 We have to turn the sliced sprites into a tile palette before we can paint a
-level with them. 
+level with them.
 
 Let's start by creating a tile palette first. Follow these steps to create
 a tile palette:
 
-* In the *Project* window, add a folder called *Tiles*.
-* In the new folder, right click and choose *Create -> 2D -> Tile palette -> Rectangular*
-* Give the new palette the name *Landscape*
+- In the _Project_ window, add a folder called _Tiles_.
+- In the new folder, right click and choose _Create -> 2D -> Tile palette -> Rectangular_
+- Give the new palette the name _Landscape_
 
-Next, navigate to the menu *Window -> 2D -> Tile Palette*. Drag the window
-next to the *Scene* tab in the middle of the screen so you end up with a layout
+Next, navigate to the menu _Window -> 2D -> Tile Palette_. Drag the window
+next to the _Scene_ tab in the middle of the screen so you end up with a layout
 that looks like the image below.
 
 ![Editor layout with tile palette docked to the right](/content/images/2022/08/03/tile-palette.png)
 
 To add the sliced sprites to our tile palette, we need to drag them from
-the *Project* window to the *Tile palette* window we just docked. You can drop
+the _Project_ window to the _Tile palette_ window we just docked. You can drop
 the tiles in the middle of the window.
 
-When you've dropped the tiles in the *Tile palette* window, Unity will ask you
-where to save the individual tiles. You can store them in the *Tiles* folder.
+When you've dropped the tiles in the _Tile palette_ window, Unity will ask you
+where to save the individual tiles. You can store them in the _Tiles_ folder.
 
 After you've dragged the tiles in and saved them, they will show up like in the previous image.
 
@@ -149,14 +150,14 @@ Now that we have the tile palette ready, let's paint!
 
 ## Setting up grid with a tilemap
 
-We've got a tile palette ready to go, now we need a surface to paint on. 
+We've got a tile palette ready to go, now we need a surface to paint on.
 We can set up a grid with a tilemap by following these steps:
 
-* Double-click the *SampleScene* from the *Scenes* folder in the *Project* window.
-* Right click *SampleScene* in the *Hierarchy* window and choose 
-  *Game object -> 2D object -> Tilemap -> Rectangular*
+- Double-click the _SampleScene_ from the _Scenes_ folder in the _Project_ window.
+- Right click _SampleScene_ in the _Hierarchy_ window and choose
+  _Game object -> 2D object -> Tilemap -> Rectangular_
 
-You'll get two things in the *Hierarchy* window: A grid and a tilemap. The grid
+You'll get two things in the _Hierarchy_ window: A grid and a tilemap. The grid
 will take care of the layout of the tiles. The tilemap itself works as a layer
 in the grid.
 
@@ -173,8 +174,8 @@ window.
 Painting is useful when you want to place individual tiles. If you want to
 create larger surfaces you can use the area tool, or the paint bucket.
 
-You can remove tiles by pressing *Shift* when using any of the tools in the
-*Tile palette* window.
+You can remove tiles by pressing _Shift_ when using any of the tools in the
+_Tile palette_ window.
 
 Once you have a nice grassy maedow, let's take a look at adding more details.
 
@@ -184,25 +185,25 @@ In the previous section we've painted a small level which may or may not be
 very interesting to walk around on. So let's expand the level with another
 layer.
 
-You can add another tilemap by right clicking the *Grid* node in the
-*Hierarchy* window and selecting *Game object -> 2D object -> Tilemap -> Rectangular*.
+You can add another tilemap by right clicking the _Grid_ node in the
+_Hierarchy_ window and selecting _Game object -> 2D object -> Tilemap -> Rectangular_.
 
-After clicking the menu item, another layer appears in the *Hierarchy*. Which we
+After clicking the menu item, another layer appears in the _Hierarchy_. Which we
 need to give a name to make it easy to find. We'll also need to configure
 how the layer is sorted.
 
-Select the new Tilemap, and take a peek at the *Inspector* window. It should
+Select the new Tilemap, and take a peek at the _Inspector_ window. It should
 list the properites for the new Tilemap.
 
-In the *Inspector* window, change *Order in layer* property to *10*. 
+In the _Inspector_ window, change _Order in layer_ property to _10_.
 
-The *Order in layer* property controls the sorting of the various layers
-in a 2D game. Many game objects will have the *Order in layer* property.
+The _Order in layer_ property controls the sorting of the various layers
+in a 2D game. Many game objects will have the _Order in layer_ property.
 As do our tilemaps.
 
 The first tilemap we created has order 0. The new one needs a order higher
 than zero to be visible on top of the original one. If you're ever running into
-invisible objects, you may want to check the *Order in layer* property.
+invisible objects, you may want to check the _Order in layer_ property.
 
 Now that we have the layers sorted we can expand the level design with more
 details by painting more tiles.
@@ -214,7 +215,7 @@ Let's fix that by optimizing the graphics settings.
 
 ## Fixing graphical issues in tilemaps
 
-Unity is optimized for 3D games and uses things like anti aliasing to make the 
+Unity is optimized for 3D games and uses things like anti aliasing to make the
 edges of objects look smoother in game. This working against us at this point.
 
 There is a good solution though. We need to change two things to make our
@@ -229,7 +230,7 @@ Let's change the anti-aliasing first.
 
 Follow these steps to disable the anti-aliasing:
 
-1. Open the menu *Edit -> Project settings* and search for anti aliasing.
+1. Open the menu _Edit -> Project settings_ and search for anti aliasing.
 2. For each of the graphics profiles, disable the setting.
 
 ![Project settings dialog with anti aliasing disabled](/content/images/2022/08/03/project-settings.png)
@@ -244,11 +245,11 @@ next.
 ### Disabling texture filters
 
 To disable the texture filters for the grass, we need to edit the properties
-of the grass image. Follow these steps to disable the texture filtering 
+of the grass image. Follow these steps to disable the texture filtering
 for the grass image:
 
-1. Select the grass image in the *Project* window.
-2. Set the Filter mode to *Point* in the *Inspector* window.
+1. Select the grass image in the _Project_ window.
+2. Set the Filter mode to _Point_ in the _Inspector_ window.
 
 And that's it. The tiles should look crisp now.
 

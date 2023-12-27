@@ -1,13 +1,16 @@
 ---
-title: 'A quick lap around Algorithmia, the online algorithm marketplace'
+title: "A quick lap around Algorithmia, the online algorithm marketplace"
 category: Machine Learning
-datePublished: '2016-04-20'
-dateCreated: '2017-07-31'
+datePublished: "2016-04-20"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>elling algorithms is becoming a thing on the internet. A number of big companies<br>
+
 have started to sell access to their algorithms. It's an interesting business model.<br>
 If you haven't got the smarts to implement an intelligent algorithm yourself, then buying<br>
 one from Microsoft or Google looks like a really smart plan.</p>
+
 <p>I'm not going to say that you will end up with a great solution. You still need to spend<br>
 time to tune and integrate everything into a working solution, but it's a great start.</p>
 <p>Talking about selling algorithms, a while back I found Algorithmia, a website which<br>
@@ -35,6 +38,7 @@ Algorithm algo = client.algo(&quot;algo://demo/Hello/0.1.1&quot;);
 AlgoResponse result = algo.pipeJson(input);
 System.out.println(result.asJsonString());
 </code></pre>
+
 <p>This looks easy enough to get going. By the way, Java isn't the only language supported<br>
 by the website. You can use Python, Scala, Javascript and many other languages.<br>
 The Algorithmia client API is a wrapper around a HTTP POST call to the website.<br>

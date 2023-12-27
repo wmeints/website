@@ -1,9 +1,10 @@
 ---
 title: Getting started with F# on your mac
 category: .NET
-datePublished: '2016-06-09'
-dateCreated: '2017-07-31'
+datePublished: "2016-06-09"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Functional programming is becoming a thing. More and more people are talking about it. I used to use Scala for a lot of projects, but always wondered about F#.</p>
 <p>Last week I swallowed the blue pill and dived into this remarkable language. As with with all languages I tried to get F# up and running on my Macbook.</p>
 <p>Here's what happened and what you need to know if you want to give F# a try on your own mac computer.</p>

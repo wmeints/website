@@ -1,12 +1,15 @@
 ---
 title: How to connect Azure API management to your Kubernetes cluster
 category: Docker
-datePublished: '2017-06-16'
-dateCreated: '2017-07-31'
+datePublished: "2017-06-16"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>For a customer I'm working on a new cloud architecture that will help them move to production quicker.<br>
+
 The goal for our team is to setup a working product, but at the same time we're learning the customer how to build<br>
 cloud applications using DevOps and continuous delivery.</p>
+
 <p>Because this project is completely new, we use .NET core. Because stuff I would say. But also, because we think<br>
 it is the way forward. To make things easier to deploy we package every service up as a docker container and deploy<br>
 it in a Kubernetes cluster on Azure.</p>

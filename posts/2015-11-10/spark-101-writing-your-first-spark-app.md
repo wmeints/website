@@ -1,12 +1,15 @@
 ---
 title: Spark 101 - Writing your first Spark app
 category: Apache Spark
-datePublished: '2015-11-10'
-dateCreated: '2017-07-31'
+datePublished: "2015-11-10"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Recently I've started exploring Apache Spark as a way to process large amounts<br>
+
 of data coming from things like sensors. The kind of things that happen in<br>
 a typical IoT solution.</p>
+
 <p>One of the things I noticed is that the hello world scenario for Spark looks<br>
 cool on the website, but in practice there are quite a few things you need<br>
 to be aware of if you want to use Spark in a real world scenario.</p>
@@ -44,6 +47,7 @@ version := &quot;0.0.1&quot;
 
 libraryDependencies += &quot;org.apache.spark&quot; %% &quot;spark-core&quot; % &quot;1.5.1&quot;
 </code></pre>
+
 <p>To make a Spark application you need just one dependency, the spark-core library.</p>
 <p>With this library in place let's write a bit of code. Create a new folder<br>
 called <code>src/main/scala/example</code> and create a file called <code>Program.scala</code> in that<br>
@@ -52,9 +56,10 @@ folder.</p>
 <pre><code class="language-scala">object Program {
   def main(args: Array[String]) = {
 
-  }
+}
 }
 </code></pre>
+
 <p>Normally you would let <code>Program</code> extend from <code>scala.App</code>, but not in the case<br>
 of Spark. This has to do with the way Spark tries to run your application and<br>
 the way Scala generates code when you base your main class on <code>scala.App</code>.</p>
@@ -63,15 +68,17 @@ work with the Spark API.</p>
 <pre><code class="language-scala">import org.apache.spark.{SparkConf, SparkContext}
 
 object Program {
-  def main(args: Array[String]) = {
-    val conf = new SparkConf()
-      .setAppName(&quot;my-app&quot;)
-      .setMaster(&quot;local&quot;)
+def main(args: Array[String]) = {
+val conf = new SparkConf()
+.setAppName(&quot;my-app&quot;)
+.setMaster(&quot;local&quot;)
 
     val sc = new SparkContext(conf)
-  }
+
+}
 }
 </code></pre>
+
 <p>I've imported the <code>SparkContext</code> and <code>SparkConf</code> class from the <code>org.apache.spark</code><br>
 package to get access to the main components provided by Spark.</p>
 <p>The SparkContext is the place to be when you want to access data<br>
@@ -86,10 +93,10 @@ sample data.</p>
 <pre><code class="language-scala">import org.apache.spark.{SparkConf, SparkContext}
 
 object Program {
-  def main(args: Array[String]) = {
-    val conf = new SparkConf()
-      .setAppName(&quot;my-app&quot;)
-      .setMaster(&quot;local[2]&quot;)
+def main(args: Array[String]) = {
+val conf = new SparkConf()
+.setAppName(&quot;my-app&quot;)
+.setMaster(&quot;local[2]&quot;)
 
     val sc = new SparkContext(conf)
 
@@ -99,9 +106,11 @@ object Program {
       Person(&quot;John&quot;, 30)))
 
     val output = dataSource.filter(person =&gt; person.age &gt; 30)
-  }
+
+}
 }
 </code></pre>
+
 <p>In this sample we now create a new RDD from a set of people and get everyone<br>
 with the age above 30.</p>
 <p>When you run this application, you get nothing. It runs really really fast.<br>
@@ -152,9 +161,11 @@ logic is separated from the main entrypoint.</p>
       Person(&quot;John&quot;, 30)))
 
     dataSource.filter(person =&gt; person.age &gt; 30)
-  }
+
+}
 }
 </code></pre>
+
 <p>The above class contains the same logic as before, but now I can inject<br>
 the spark context into the class and I get the results back so that I can<br>
 validate them.</p>
@@ -162,18 +173,20 @@ validate them.</p>
 <pre><code class="language-scala">import org.apache.spark.{SparkConf, SparkContext}
 
 object Program {
-  def main(args: Array[String]) = {
-    val conf = new SparkConf()
-      .setAppName(&quot;my-app&quot;)
-      .setMaster(&quot;local[2]&quot;)
+def main(args: Array[String]) = {
+val conf = new SparkConf()
+.setAppName(&quot;my-app&quot;)
+.setMaster(&quot;local[2]&quot;)
 
     val sc = new SparkContext(conf)
 
     val algorithm = new CalculatePeopleAboveThirty(sc)
     val output = algorithm.calculate()
-  }
+
+}
 }
 </code></pre>
+
 <p>The program now only sets up the configuration and spark context and<br>
 calls a separate algorithm to perform the calculation.</p>
 <p>Now that we have the separate class we can write a unit-test to validate<br>
@@ -184,10 +197,10 @@ with Matchers with ShouldVerb with BeforeAndAfter {
     .setAppName(&quot;people-test&quot;)
     .setMaster(&quot;local[2]&quot;)
 
-  val sc = new SparkContext(conf)
+val sc = new SparkContext(conf)
 
-  &quot;People Algorithm&quot; when {
-    val algorithm = new CalculatePeopleAboveThirty(sc)
+&quot;People Algorithm&quot; when {
+val algorithm = new CalculatePeopleAboveThirty(sc)
 
     &quot;asked to get people above 30&quot; should {
       &quot;filter out people that are below 30&quot; in {
@@ -196,13 +209,15 @@ with Matchers with ShouldVerb with BeforeAndAfter {
         output.count() should equal(2)
       }
     }
-  }  
 
-  override def after(fun: =&gt; Any) = {
-    sc.stop()
-  }
+}
+
+override def after(fun: =&gt; Any) = {
+sc.stop()
+}
 }
 </code></pre>
+
 <p>This test spins up a spark context configured to run locally. You can do this<br>
 by setting the master to &quot;local&quot; providing the number of partitions to use<br>
 between angle brackets.</p>

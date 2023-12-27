@@ -1,9 +1,10 @@
 ---
-title: 'Adventures in AI part 3: How do I know my ML model is any good?'
+title: "Adventures in AI part 3: How do I know my ML model is any good?"
 category: Machine Learning
-datePublished: '2018-01-22'
-dateCreated: '2018-01-21'
+datePublished: "2018-01-22"
+dateCreated: "2018-01-21"
 ---
+
 <!--kg-card-begin: markdown--><p>You can train any model you like for your AI solution, but it is only as good as the data you feed it. But how do you measure the performance of a machine learning model? In this third part of the series on AI models I will show you how.</p>
 <p>This post is part of a series on AI, you can find more information in the <a href="https://fizzylogic.nl/2017/05/26/adventures-in-ai-part-1-what-is-a-gradient-descent-algorithm/">first post of the series</a>.</p>
 <h2 id="validationofmachinelearningmodelsisdifferent">Validation of machine learning models is different</h2>

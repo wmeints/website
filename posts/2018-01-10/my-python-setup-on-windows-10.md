@@ -1,9 +1,10 @@
 ---
 title: My python setup on Windows 10
 category: Python
-datePublished: '2018-01-10'
-dateCreated: '2018-01-10'
+datePublished: "2018-01-10"
+dateCreated: "2018-01-10"
 ---
+
 <!--kg-card-begin: markdown--><p>Setting up a proper development environment for Python and Data Science projects can be hard on Windows. Python's origin isn't on Windows which shows, but you can get it to work with just a few tweaks. Here's how.</p>
 <h2 id="useanaconda">Use anaconda</h2>
 <p>For my work on AI projects I require tools like scipy, sklearn and tensorflow. These packages require native C math libraries. On Linux these math libraries are installed in your OS so you don't have to worry about them. On Windows however you need to install them yourself.</p>

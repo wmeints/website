@@ -1,13 +1,14 @@
 ---
 title: Fun ChatGPT prompts to improve your Python code
 category: Machine Learning
-datePublished: '2023-04-23'
-dateCreated: '2023-04-23'
+datePublished: "2023-04-23"
+dateCreated: "2023-04-23"
 ---
-After a long week in Seattle for the MVP summit, I needed some low level fun on my computer. I got to work on some Python code with GPT-4.
-I tried a few prompts for things that I absolutely dislike in Python. 
 
-In this post you'll find 4 of the prompts that I tried so you can use them as quality of life improvements in your coding sessions. 
+After a long week in Seattle for the MVP summit, I needed some low level fun on my computer. I got to work on some Python code with GPT-4.
+I tried a few prompts for things that I absolutely dislike in Python.
+
+In this post you'll find 4 of the prompts that I tried so you can use them as quality of life improvements in your coding sessions.
 
 Let's get started!
 
@@ -21,13 +22,13 @@ For example, when you have a piece of code like this:
 def calculate_costs(loan_amount: int, interest_rate: float, duration_years: int):
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return loan_amount * pow((1 + interest_rate/100), duration_years)
 ```
 
@@ -39,13 +40,13 @@ Write a python docstring for the following method:
 def calculate_costs(loan_amount: int, interest_rate: float, duration_years: int):
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return loan_amount * pow((1 + interest_rate/100), duration_years)
 ```
 
@@ -84,19 +85,19 @@ Write unit-tests for the following code:
 def calculate_costs(loan_amount: int, interest_rate: float, duration_years: int):
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return loan_amount * pow((1 + interest_rate/100), duration_years)
 ```
 
 It will generate code like this:
 
-``` python
+```python
 import unittest
 
 class TestCalculateCosts(unittest.TestCase):
@@ -139,7 +140,7 @@ if __name__ == '__main__':
 ```
 
 Pretty cool. It saves a ton of time since it not only makes a basic test, it will actually break down the logic and
-write a couple of tests for different paths in the code. 
+write a couple of tests for different paths in the code.
 
 I don't have to tell you that you'll need to use a calculator to verify the numbers here, right?
 
@@ -151,13 +152,13 @@ Write unit-tests in pytest for the following code:
 def calculate_costs(loan_amount: int, interest_rate: float, duration_years: int):
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return loan_amount * pow((1 + interest_rate/100), duration_years)
 ```
 
@@ -203,6 +204,7 @@ def test_zero_duration_years():
 ```
 
 ## Prompt idea 3: Check your code for optimizations and bugs
+
 Now that we have tests, I think it's a good idea to ask the model to check out my code
 for bugs and optimizations. Since I have tests now, I can more easily verify that
 the optimizations are correct.
@@ -215,13 +217,13 @@ Can you check the following code for bugs?:
 def calculate_costs(loan_amount: int, interest_rate: float, duration_years: int):
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return loan_amount * pow(duration_years, (1 + interest_rate/100))
 ```
 
@@ -237,17 +239,17 @@ The code returned looks like this:
 def calculate_costs(loan_amount: float, interest_rate: float, duration_years: int) -> int:
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return int(loan_amount * pow((1 + interest_rate/100), duration_years))
 ```
 
-Almost correct. I want to return floats because costs are expressed in euros here. 
+Almost correct. I want to return floats because costs are expressed in euros here.
 I guess the function didn't mention this. Let's tell the model:
 
 ```
@@ -260,13 +262,13 @@ The model will now change the function a bit, and remove the int cast.
 def calculate_costs(loan_amount: int, interest_rate: float, duration_years: int) -> float:
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return loan_amount * pow((1 + interest_rate/100), duration_years)
 ```
 
@@ -277,19 +279,19 @@ the `pow` function. Let's see if we can refactor the code.
 
 Let's give the following prompt:
 
-```text 
+```text
 Can you refactor this method replacing pow with the ** operator?
 
 def calculate_costs(loan_amount: int, interest_rate: float, duration_years: int) -> float:
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return loan_amount * pow((1 + interest_rate/100), duration_years)
 ```
 
@@ -299,13 +301,13 @@ The model will return the following code:
 def calculate_costs(loan_amount: int, interest_rate: float, duration_years: int) -> float:
     if loan_amount <= 0:
         raise ValueError("loan_amount must be positive")
-    
+
     if interest_rate <= 0:
         raise ValueError("interest_rate must be positive")
-    
+
     if duration_years <= 0:
         raise ValueError("duration_years must be positive")
-    
+
     return loan_amount * ((1 + interest_rate/100) ** duration_years)
 ```
 

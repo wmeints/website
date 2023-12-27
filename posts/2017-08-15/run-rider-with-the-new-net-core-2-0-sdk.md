@@ -1,9 +1,10 @@
 ---
 title: Run Rider even with the new .NET Core 2.0 SDK
 category: .NET
-datePublished: '2017-08-15'
-dateCreated: '2017-08-15'
+datePublished: "2017-08-15"
+dateCreated: "2017-08-15"
 ---
+
 <!--kg-card-begin: markdown--><p>This week .NET Core 2.0 alongside with ASP.NET Core 2.0 was released. A lot of improvements were made to the runtime and the size of the standard libraries has increased significantly. More and more .NET APIs are available to you.</p>
 <p>Also, Rider was released a new IDE specifically for .NET development in C# and F#. It currently supports only .NET Core 1.x. You can of course run .NET Core 2.0, but it will warn you that not everything works as expected.</p>
 <p>You can of course use Rider even with these limitations. But if you're working on an existing project and can't upgrade it's better to have it running on the 1.x SDK.</p>

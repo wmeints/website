@@ -1,9 +1,10 @@
 ---
-title: 'Good recruiters, bad recruiters and how to deal with them'
+title: "Good recruiters, bad recruiters and how to deal with them"
 category: Best practices
-datePublished: '2015-12-10'
-dateCreated: '2017-07-31'
+datePublished: "2015-12-10"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Every week I get at least 3 questions whether I'd like to change jobs. It usually goes something like this:</p>
 <p>&quot;Hi we are looking for developers for a company somewhere in the country.<br>
 Tt's really great, they are the most fun to work with. The do<br>

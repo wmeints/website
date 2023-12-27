@@ -1,9 +1,10 @@
 ---
 title: How to create multi-project SBT build files
 category: Scala
-datePublished: '2015-05-28'
-dateCreated: '2017-07-31'
+datePublished: "2015-05-28"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>A while back I started programming Scala for the first time. It was also the first introduction to the scala build tool. The defacto standard build tool for compiling and packaging scala applications.</p>
 <p>The first steps were easy, I had projects up and running in no time. But now I've come across a scenario where I need to create a piece of software that actually is composed of multiple<br>
 projects. This presented me with an interesting problem. How can you build a project with SBT that depends on other projects that also use SBT.</p>
@@ -40,9 +41,10 @@ as long as it is something that is recognizable for people later on.</p>
 import Keys._
 
 object MyBuild extends Build {
-  lazy val root = Project(id = &quot;root&quot;, base = file(&quot;.&quot;))
+lazy val root = Project(id = &quot;root&quot;, base = file(&quot;.&quot;))
 }
 </code></pre>
+
 <p>Now to add a reference to the child projects. For now imagine that we have a<br>
 core project which contains all the basic functionality of the project and a<br>
 console project that contains a console interface for the project.</p>
@@ -52,11 +54,12 @@ project to the scala file you just created.</p>
 import Keys._
 
 object MyBuild extends Build {
-  lazy val root = Project(id = &quot;root&quot;, base = file(&quot;.&quot;))
-  lazy val core = Project(id = &quot;core&quot;, base = file(&quot;core&quot;))
-  lazy val console = Project(id = &quot;console&quot;, base = file(&quot;console&quot;))
+lazy val root = Project(id = &quot;root&quot;, base = file(&quot;.&quot;))
+lazy val core = Project(id = &quot;core&quot;, base = file(&quot;core&quot;))
+lazy val console = Project(id = &quot;console&quot;, base = file(&quot;console&quot;))
 }
 </code></pre>
+
 <p>Now if you start sbt right now and you enter the command projects it will<br>
 display the root, core and console project. You can even switch between projects<br>
 by entering <code>project [name]</code>. Run your regular commands after that just like you normally would.</p>
@@ -69,11 +72,12 @@ depends on core in the build scala file you just created.</p>
 import Keys._
 
 object MyBuild extends Build {
-  lazy val root = Project(id = &quot;root&quot;, base = file(&quot;.&quot;))
-  lazy val core = Project(id = &quot;core&quot;, base = file(&quot;core&quot;))
-  lazy val console = Project(id = &quot;console&quot;, base = file(&quot;console&quot;)) dependsOn &quot;core&quot;
+lazy val root = Project(id = &quot;root&quot;, base = file(&quot;.&quot;))
+lazy val core = Project(id = &quot;core&quot;, base = file(&quot;core&quot;))
+lazy val console = Project(id = &quot;console&quot;, base = file(&quot;console&quot;)) dependsOn &quot;core&quot;
 }
 </code></pre>
+
 <p>Now that we have declared that console depends on core, the classes from core<br>
 will be available to the project console. Also, when you run commands like compile<br>
 on the console project, SBT will make sure that the core project is also compiled.</p>
@@ -86,12 +90,13 @@ this you specify an aggregation.</p>
 import Keys._
 
 object MyBuild extends Build {
-  lazy val core = Project(id = &quot;core&quot;, base = file(&quot;core&quot;))
-  lazy val console = Project(id = &quot;console&quot;, base = file(&quot;console&quot;)) dependsOn &quot;core&quot;
+lazy val core = Project(id = &quot;core&quot;, base = file(&quot;core&quot;))
+lazy val console = Project(id = &quot;console&quot;, base = file(&quot;console&quot;)) dependsOn &quot;core&quot;
 
-  lazy val root = Project(id = &quot;root&quot;, base = file(&quot;.&quot;)) aggregate &quot;core&quot;, &quot;console&quot;
+lazy val root = Project(id = &quot;root&quot;, base = file(&quot;.&quot;)) aggregate &quot;core&quot;, &quot;console&quot;
 }
 </code></pre>
+
 <p>Now when you start SBT you can invoke compile and it will compile the root, core and console projects<br>
 all at once. All tasks you run in a project that is an aggregate of other projects will be run<br>
 against all projects defined in the aggregate statement.</p>

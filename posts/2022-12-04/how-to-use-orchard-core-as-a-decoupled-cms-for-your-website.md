@@ -1,15 +1,16 @@
 ---
 title: How-to use Orchard Core as a decoupled CMS for your website
 category: Web development
-datePublished: '2022-12-04'
-dateCreated: '2022-12-04'
+datePublished: "2022-12-04"
+dateCreated: "2022-12-04"
 ---
+
 We've been using wordpress for the Aigency website since last year and it helped
 us to quickly set up things for the company. However, we've found that wordpress
 has a number of issues that just aren't fixable for us.
 
 So instead of continuing to use Wordpress, we decided to look for something new.
-There are a large number of options when it comes to building websites with a 
+There are a large number of options when it comes to building websites with a
 CMS but I personally would like something simple.
 
 In this post we'll explore Orchard Core as a CMS and why I prefer to build our
@@ -32,7 +33,7 @@ was fine since by then we had changed so much it wasn't Orchard anymore.
 
 I remember pushing out docs changes and code changes to Orchard from time to
 time. It has a great community of people that are willing to help in a lot of
-ways. 
+ways.
 
 When I needed to find an alternative to Wordpress, it was only logical to take
 another peek at Orchard Core to see how it would do with my current use case.
@@ -41,10 +42,10 @@ another peek at Orchard Core to see how it would do with my current use case.
 
 Orchard Core offers four ways to build a website:
 
-* Fully managed CMS
-* Decoupled CMS
-* Headless CMS
-* Multi-tenant modular applications
+- Fully managed CMS
+- Decoupled CMS
+- Headless CMS
+- Multi-tenant modular applications
 
 First, you can configure your web application as a fully managed CMS. Orchard
 takes care of managing the content and rendering that content. This is a mode
@@ -69,8 +70,8 @@ functionality. In that case you're likely not managing any content.
 We opted to build our website with Orchard as a decoupled CMS. We have a couple
 of reasons to go for this option:
 
-* We have mostly content that doesn't change often but has a complex layout
-* We have podcasts and blogs that we want to change regularly
+- We have mostly content that doesn't change often but has a complex layout
+- We have podcasts and blogs that we want to change regularly
 
 The Aigency website is a marketing website that doesn't change weekly. So we
 have a design that's pretty to look at and complex to build with the elements
@@ -78,10 +79,10 @@ that are offered in Orchard Core. I think we can build it fully in the CMS, but
 in the end we would have to write a lot of the HTML ourselves.
 
 However, we also have content that isn't that complicated. Blogposts and
-Podcasts have a fixed layout that's pretty basic. 
+Podcasts have a fixed layout that's pretty basic.
 
 For the podcasts we plan to use the Buzzsprout API to sync the episodes to the
-website. 
+website.
 
 For the blogposts we want Orchard to manage the content.
 
@@ -94,7 +95,7 @@ in Visual Studio or in the terminal with the following command:
 dotnet new web -n MyWebsite
 ```
 
-After setting up the website, add the following package to the project. 
+After setting up the website, add the following package to the project.
 
 ```
 dotnet add package OrchardCore.Application.Cms.Core.Targets
@@ -112,7 +113,7 @@ using Serilog.Sinks.ApplicationInsights.TelemetryConverters;
 using Migrations = Aigency.Web.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
-    
+
 builder.Services.AddOrchardCms();
 
 var app = builder.Build();
@@ -174,7 +175,7 @@ file in the web project:
           "RecipeName": "Blank"
         }
       ]
-    },
+    }
   }
 }
 ```
@@ -245,16 +246,16 @@ public class Migrations : DataMigration
 
 The migration class contains the following pieces:
 
-* First, we need to create a class called Migrations that derives from DataMigration
-* Next, we create a method `Create` that returns the version `1`
-* Then, we define a new content part `SocialMetadata` with a couple of fields
-* After that, we create a new content-type `Post` with a title, body, and the social metadata that we created earlier
+- First, we need to create a class called Migrations that derives from DataMigration
+- Next, we create a method `Create` that returns the version `1`
+- Then, we define a new content part `SocialMetadata` with a couple of fields
+- After that, we create a new content-type `Post` with a title, body, and the social metadata that we created earlier
 
 If you're interested in the details of migrations I recommend reading the
 following two articles:
 
-* [Data Migrations](https://docs.orchardcore.net/en/latest/docs/reference/modules/Migrations/)
-* [Content Type Migrations](https://docs.orchardcore.net/en/latest/docs/reference/modules/ContentTypes/#migrations)
+- [Data Migrations](https://docs.orchardcore.net/en/latest/docs/reference/modules/Migrations/)
+- [Content Type Migrations](https://docs.orchardcore.net/en/latest/docs/reference/modules/ContentTypes/#migrations)
 
 After adding the migration class we need to explain to Orchard Core how to run
 the migrations. Modify the `Program.cs` to include the following code:
@@ -266,9 +267,9 @@ builder.Services
     .EnableFeature("OrchardCore.Contents")
     .EnableFeature("OrchardCore.ContentTypes")
     .EnableFeature("OrchardCore.Media")
-    .ConfigureServices(services => 
-    { 
-        services.AddDataMigration<Migrations>(); 
+    .ConfigureServices(services =>
+    {
+        services.AddDataMigration<Migrations>();
     });
 ```
 
@@ -311,16 +312,16 @@ In the Razor Page, add the following content:
 
 This code performs a couple of steps:
 
-* First, we inject the `IOrchardHelper` so we can interact with the CMS part
-* Next, we load the latest posts from the database
-* Finally, we loop over the posts and render the title part
+- First, we inject the `IOrchardHelper` so we can interact with the CMS part
+- Next, we load the latest posts from the database
+- Finally, we loop over the posts and render the title part
 
 This is obviously very basic, but it demonstrates quite well how you can combine
 artisanal HTML with content coming from the CMS.
 
 ## Where to next
 
-I hope you've got a sense of what OrchardCore can offer as a decoupled CMS. 
+I hope you've got a sense of what OrchardCore can offer as a decoupled CMS.
 If you're interested in learning more, I can highly recommend checking out
 the documentation on [the Orchard Core website](https://orchardcore.net/).
 

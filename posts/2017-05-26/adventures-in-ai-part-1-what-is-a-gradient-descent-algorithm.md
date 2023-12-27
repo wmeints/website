@@ -1,12 +1,15 @@
 ---
-title: 'Adventures in AI part 1: What is a gradient descent algorithm?'
+title: "Adventures in AI part 1: What is a gradient descent algorithm?"
 category: Machine Learning
-datePublished: '2017-05-26'
-dateCreated: '2017-07-31'
+datePublished: "2017-05-26"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>When you start out with machine learning and AI you will learn very quickly that there's a lot of math involved.<br>
+
 All this math is very hard to understand, especially if you have a background in software engineering rather than<br>
 statistics. Most of the stuff you will find on the internet assumes that you know your statistics, which you probably don't.</p>
+
 <p>In this series I will invite you along on my personal AI trip along some very cool algorithms and seriously hard topics.<br>
 I will explain them as simple as I can so you too can start to use machine learning and deep learning in your daily work.</p>
 <p>In this series I will address the following topics:</p>
@@ -106,16 +109,17 @@ Let's look at some code for this:</p>
 
     return new_weight, new_bias
 
-
 def gradient_descent(x, y, bias, weight, learning_rate, iterations):
-    for i in range(0, iterations):
-        new_weight, new_bias = step_gradient(x, y, weight, bias, learning_rate)
+for i in range(0, iterations):
+new_weight, new_bias = step_gradient(x, y, weight, bias, learning_rate)
 
         weight = new_weight
         bias = new_bias
 
     return weight, bias
+
 </code></pre>
+
 <p>The gradient descent algorithm in this sample has two functions. First there's the <code>gradient_step</code> function<br>
 and second there's the <code>gradient_descent</code> function. The <code>gradient_descent</code> function iteratively calls the<br>
 <code>gradient_step</code> function with the current weights and inputs. The <code>gradient_step</code> function takes the original<br>

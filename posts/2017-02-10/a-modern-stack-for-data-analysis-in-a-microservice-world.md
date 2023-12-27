@@ -1,9 +1,10 @@
 ---
 title: A modern stack for data analysis in a microservice world
 category: Machine Learning
-datePublished: '2017-02-10'
-dateCreated: '2017-07-31'
+datePublished: "2017-02-10"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>The face of enterprise solutions is changing rapidly. We are making smaller solutions at a larger scale by deploying microservice architectures. This brings many advantages to developers and customers because solutions become more flexible to change and scale better. Microservices also bring a number new of challenges. Especially for companies that want insight in how their business is doing.</p>
 <p>Since data is no longer coming from one source, but from many sources and since data is no longer of a uniform shape you need a solution that is up to the challenge. Processing data in a microservice world requires a stack that can process streams, unstructured data and structured data. And it should do it fast.</p>
 <p>In this post I will show what a modern data analysis stack looks like and how you can use open source tools to setup a modern data analysis solution in your company.</p>

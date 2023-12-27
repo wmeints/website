@@ -1,13 +1,16 @@
 ---
 title: 5 tips to improve your machine learning solution
 category: Machine Learning
-datePublished: '2016-02-28'
-dateCreated: '2017-07-31'
+datePublished: "2016-02-28"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Last week I teached a group of colleagues about machine learning. The goal for<br>
+
 the training was to remove the black box and learn more about what you can do<br>
 with machine learning. We also covered some discussions that arise when you start<br>
 to use machine learning.</p>
+
 <p>There's a lot of things you need to think about when you start to apply machine<br>
 learning. Although it's not impossibly hard, there's still a lot of stuff you need<br>
 to think about.</p>

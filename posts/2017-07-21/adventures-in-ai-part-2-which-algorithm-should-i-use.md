@@ -1,9 +1,10 @@
 ---
-title: 'Adventures in AI Part 2: Which algorithm should I use?'
+title: "Adventures in AI Part 2: Which algorithm should I use?"
 category: Machine Learning
-datePublished: '2017-07-21'
-dateCreated: '2017-07-31'
+datePublished: "2017-07-21"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Choosing the right algorithm for your machine learning problem can be quite hard. I've had numerous questions about it during the machine learning course. Also I've seen many people struggle to find more information about it on the internet. There are of course plenty cheat sheets around. But all of them seem to be focused on the tools that the company behind the cheatsheet delivers.</p>
 <p>In this second post of the series &quot;Adventures in AI&quot; I will show you how to pick the right algorithm for your machine learning problem.<br>
 To make things easier on you I've put together a mind map with a comprehensive set of machine learning algorithms which I will update regularly.</p>

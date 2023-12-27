@@ -1,12 +1,15 @@
 ---
 title: project.json is going away and it's a good thing
 category: .NET
-datePublished: '2016-05-11'
-dateCreated: '2017-07-31'
+datePublished: "2016-05-11"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>During the last community standup of the ASP.NET core team Damien announced that<br>
+
 project.json is going away. This spurred a discussion on twitter that<br>
 left me with the feeling that this is a bad thing.</p>
+
 <p>I think my fellow tweeps are wrong on this matter and here's why.</p>
 <!-- more -->
 <p>Damien announced during the community standup of may 10th<br>

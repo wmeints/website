@@ -3,9 +3,10 @@ title: >-
   Building a passwordless login flow with WebAuthn and the Feitian ePass FIDO2
   Key
 category: .NET
-datePublished: '2022-08-13'
-dateCreated: '2022-08-13'
+datePublished: "2022-08-13"
+dateCreated: "2022-08-13"
 ---
+
 A few weeks ago, I received a request to do an honest review of the Feitian ePass FIDO2 Key. I don't usually write
 product reviews. But I figured: This is an excellent reason to write a login system with just a FIDO2 USB key for logging
 in.
@@ -34,7 +35,7 @@ It works like this:
 
 1. You ask the server to register a new account.
 2. The server sends you a registration challenge that you must complete.
-3. To complete the registration challenge, your browser creates a public and private key pair. 
+3. To complete the registration challenge, your browser creates a public and private key pair.
    It then uses the private key to sign the challenge. After signing the challenge, the public key, and the challenge
    are returned to the server.
 4. The server verifies it's you by checking the signature with the public key. It also confirms that you and not someone
@@ -46,9 +47,9 @@ steps are necessary to ensure that the registration process happens correctly an
 Once you're registered, you can log in using your key pair, which works as follows:
 
 1. You ask the server for a login challenge that you can complete using the registered public key.
-2. Your browser retrieves the key pair associated with the login challenge and signs the challenge using the private key. 
-   It sends the signed challenge to the server to log in. 
-3. The server verifies that the challenge was correctly signed using the public key. 
+2. Your browser retrieves the key pair associated with the login challenge and signs the challenge using the private key.
+   It sends the signed challenge to the server to log in.
+3. The server verifies that the challenge was correctly signed using the public key.
    If it's valid, you're logged in just like you would be with a user name and password.
 
 As you can probably imagine, this process is, in reality, a lot more complex. I've highlighted the core here. For
@@ -67,7 +68,7 @@ The big question here is: How do we obtain a key pair?
 In this post and the demo, I will only cover how to use FIDO2 keys to authenticate users. You'll need a
 slightly different configuration to use your mobile phone or the TPM.
 
-FIDO2 is the Fast Identity Online standard version 2. It's implemented in two parts. The WebAuthn standard and 
+FIDO2 is the Fast Identity Online standard version 2. It's implemented in two parts. The WebAuthn standard and
 CTAP (Client to authenticator protocol). Where WebAuthn handles the authentication and registration steps
 in the browser, CTAP handles communication between FIDO2 keys and the browser.
 
@@ -76,11 +77,11 @@ key is used to store the keypairs you need for accessing web applications.
 
 ## Implementing WebAuthn in ASP.NET Core
 
-As a test case, I implemented WebAuthn in a small ASP.NET Core application. I used [the Fido2 library][FIDO2_LIB] to 
-implement the server-side components. 
+As a test case, I implemented WebAuthn in a small ASP.NET Core application. I used [the Fido2 library][FIDO2_LIB] to
+implement the server-side components.
 
 My experience with the Fido2 .NET package is mixed. The library is small and doesn't have much functionality
-other than creating and verifying challenges for registering and authenticating users. It uses 
+other than creating and verifying challenges for registering and authenticating users. It uses
 [a callback pattern][CALLBACK_SAMPLE] to perform certain checks you need to implement yourself. This feels strange
 and unnecessary. There are better ways to implement these checks.
 
@@ -100,7 +101,7 @@ As I mentioned earlier, I got one for free to try out. I received the ePass FIDO
 changed the catalog quite a bit. [The K39](https://www.ftsafe.com/Products/FIDO/Single_Button_FIDO) is the closest to
 the one I received.
 
-So how does the FIDO2 key work in combination with WebAuthn? There are two spots where the key is essential. 
+So how does the FIDO2 key work in combination with WebAuthn? There are two spots where the key is essential.
 After you receive the registration challenge from the server, you can ask the browser to create a key pair to complete
 the challenge.
 
@@ -124,7 +125,7 @@ shape. But I guess that will happen at some point. A robust key is essential.
 
 The ePass FIDO2 key comes in a solid aluminum housing with a black plastic middle. It felt robust and wasn't
 hard to put on my keyring. I think Feitian spent quite a bit of time designing and testing it. The USB connector is integrated
-tightly; there's absolutely no movement whatsoever. 
+tightly; there's absolutely no movement whatsoever.
 
 The overall package is tiny, which is ideal since I carry it in my jeans pocket. The small form factor is essential to me. I'm in a wheelchair, and I already have a hard time reaching for my keys. Any large object on the
 keyring will get in the way. Luckily, that's not the case with the Feitian ePass FIDO2 key.
@@ -145,7 +146,7 @@ Now that you've got a bit of an idea of what the Feitian ePass FIDO2 key feels l
 ### About Feitian
 
 The company that sent me the FIDO2 key is Feitian. It's based in Beijing, China. They're pretty unknown but not small
-by any measure. They've got over 1000 people working for them. And they're active in over 100 regions. 
+by any measure. They've got over 1000 people working for them. And they're active in over 100 regions.
 
 Regarding documentation, they're not very focused on providing much documentation. You're better
 off browsing StackOverflow and the official specifications to learn how to use the FIDO2 key in your application.
@@ -165,13 +166,13 @@ factors that come into play for me when choosing a FIDO2 key:
 - How solid is the product? Can it withstand abuse?
 - What's the price of the product?
 
-Here's the good news. The Feitian ePass FIDO2 key goes for around 20 euros for the basic version in Europe. 
+Here's the good news. The Feitian ePass FIDO2 key goes for around 20 euros for the basic version in Europe.
 The NFC version goes for approximately 50 euros. The Yubico keys are a lot more expensive. So this product could be an
 interesting contender.
 
 ## Conclusion
 
-I had some fun building WebAuthn into a web application and testing out the Feitian ePass FIDO2 Keys. I 
+I had some fun building WebAuthn into a web application and testing out the Feitian ePass FIDO2 Keys. I
 think FIDO2 and WebAuthn are good ways to log in without passwords. It would certainly make my life
 easier. I hope that the support in .NET gets better, as the library I used wasn't very consistent in its naming
 and had a weird callback pattern that I still don't fully grasp.

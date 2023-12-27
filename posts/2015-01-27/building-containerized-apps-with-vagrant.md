@@ -1,15 +1,18 @@
 ---
 title: Building containerized apps with vagrant
 category: Docker
-datePublished: '2015-01-27'
-dateCreated: '2017-07-31'
+datePublished: "2015-01-27"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Building apps that use docker as a means to deploy different services for the<br>
+
 application is somewhat weird. You have to type in a lot of docker commands<br>
 to get everything up and running. That is not all, on top of having to<br>
 execute a lot of commands you also have to deal with a the rather long commands.<br>
 There's quite a few things you can configure and you have to specify all that<br>
 on the commandline.</p>
+
 <p>In this post I will show you a tip that will save you a lot of time when you<br>
 work a lot with docker containers.</p>
 <!-- more -->
@@ -27,16 +30,16 @@ a new Vagrantfile in your project directory with the following contents:</p>
 <pre><code class="language-ruby">Vagrant.configure(2) do |config|
   config.vm.box = &quot;ubuntu/trusty64&quot;
 
-  config.vm.provider &quot;virtualbox&quot; do |v|
-    v.customize [&quot;modifyvm&quot;, :id, &quot;--memory&quot;, &quot;2048&quot;]
-    v.customize [&quot;modifyvm&quot;, :id, &quot;--cpus&quot;, &quot;2&quot;]
-  end
+config.vm.provider &quot;virtualbox&quot; do |v|
+v.customize [&quot;modifyvm&quot;, :id, &quot;--memory&quot;, &quot;2048&quot;]
+v.customize [&quot;modifyvm&quot;, :id, &quot;--cpus&quot;, &quot;2&quot;]
+end
 
-  config.vm.provision &quot;docker&quot; do |docker|
-    # Configure docker images on your machine
-  end
+config.vm.provision &quot;docker&quot; do |docker| # Configure docker images on your machine
+end
 end
 </code></pre>
+
 <p>This vagrantfile uses the 14.04 version of ubuntu as a starting point.<br>
 On top of that base box, it will automatically install the latest version of<br>
 docker.</p>

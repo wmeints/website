@@ -1,11 +1,14 @@
 ---
 title: Why you should try F#
 category: .NET
-datePublished: '2016-06-26'
-dateCreated: '2017-07-31'
+datePublished: "2016-06-26"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>A few weeks ago I gave F# a shot, I have my personal reasons for doing this. But I can imagine<br>
+
 you are confused about this sudden move. Why should you even try this weird language? Almost nobody uses it!</p>
+
 <p>You are right, not a lot of people use F# in their projects. But there are a few reasons why I<br>
 think you should give it a shot for a hobby project.</p>
 <!-- more -->
@@ -49,41 +52,41 @@ abstract class Either&lt;TL,TR&gt;
 
 class Left&lt;TL,TR&gt;: Either&lt;TL,TR&gt;
 {
-  public TL Value {get;}
-  public override bool IsLeft { get { return true; } }
-  public override bool IsRight { get { return false; } }
+public TL Value {get;}
+public override bool IsLeft { get { return true; } }
+public override bool IsRight { get { return false; } }
 }
 
 class Right&lt;TL,TR&gt;: Either&lt;TL,TR&gt;
 {
-  public TR Value { get; }
-  public override bool IsLeft { get { return false; } }
-  public override bool IsRight { get { return true; } }
+public TR Value { get; }
+public override bool IsLeft { get { return false; } }
+public override bool IsRight { get { return true; } }
 }
-
 
 public Either&lt;Error,T&gt; Validate(T input, List&lt;Validator&lt;T&gt;&gt; validators)
 {
-  foreach(var validator in validators)
-  {
-    if(!validator.Validate(input)) {
-      return new Left&lt;Error,T&gt;(new Error(validator.ErrorMessage));
-    }
-  }
+foreach(var validator in validators)
+{
+if(!validator.Validate(input)) {
+return new Left&lt;Error,T&gt;(new Error(validator.ErrorMessage));
+}
+}
 
-  return new Right&lt;Error,T&gt;(input);
+return new Right&lt;Error,T&gt;(input);
 }
 </code></pre>
+
 <p>This is a huge amount of code for something as simple as validation logic. On top of that if I want to discover whether I got an error or valid result I need to check for types using <code>if(result is Right&lt;Error,Person&gt;)</code> or<br>
 similar constructions.</p>
 <p>In F# the same is much simpler:</p>
 <pre><code class="language-fsharp">type Either&lt;'L,'R&gt; = Left of 'L | Right of 'R
 
 let validate item validators =
-    let collectValidationErrors validator item errors =
-        match (validator item) with
-        | Some(error) -&gt; error :: errors
-        | None -&gt; errors
+let collectValidationErrors validator item errors =
+match (validator item) with
+| Some(error) -&gt; error :: errors
+| None -&gt; errors
 
     let rec validateRecursive results item validators =
         match validators with
@@ -95,7 +98,9 @@ let validate item validators =
     match results with
     | [] -&gt; Right(item)
     | _ -&gt; Left(results)
+
 </code></pre>
+
 <p>First I define that there's an either type that has a Left of my defined type<br>
 and a Right for another type. This is a union type. In C# this is equal to a base class with two subclasses.</p>
 <p>Next I define a function called validate. This function I can feed an item to validate and a set of validations that need to be performed on the specified item.</p>

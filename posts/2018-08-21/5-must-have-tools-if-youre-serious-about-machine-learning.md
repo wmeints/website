@@ -1,9 +1,10 @@
 ---
 title: 3 Must-have tools if you're serious about machine learning
 category: Machine Learning
-datePublished: '2018-08-21'
-dateCreated: '2018-08-21'
+datePublished: "2018-08-21"
+dateCreated: "2018-08-21"
 ---
+
 <!--kg-card-begin: markdown--><p>When working on machine learning problems I find that productivity is sometimes somewhat low, because I have to spend a lot of time working on tedious bits that probably can be automated away. Over time I have found quite a few tools that help me get better results faster. Here's three of them.</p>
 <h2 id="pandasprofiling">Pandas profiling</h2>
 <p>Pandas is one of the most widely used libraries for loading and processing data in Python. It has a great set of features to perform various statistical operations on your data.</p>
@@ -24,6 +25,7 @@ import pandas_profiling
 df = pd.read_csv('my_data.csv')
 pandas_profiling.ProfileReport(df)
 </code></pre>
+
 <p>This outputs a bunch of HTML, containing all the information mentioned above.</p>
 <p>For me, this tool saves a lot of time. Normally I spend quite a bit of time typing in all the commands to get the various statistics. Now I just need one to achieve the same results.</p>
 <p>Download the tool here: <a href="https://github.com/pandas-profiling/pandas-profiling">https://github.com/pandas-profiling/pandas-profiling</a></p>
@@ -35,19 +37,20 @@ pandas_profiling.ProfileReport(df)
 <pre><code class="language-python">import featuretools as ft
 
 entities = {
-    'customers': (customers_df, 'customer_id'),
-    'orders': (orders_df, 'order_id')
+'customers': (customers_df, 'customer_id'),
+'orders': (orders_df, 'order_id')
 }
 
 relationships = [
-    ('customers','customer_id','orders','customer_id')
+('customers','customer_id','orders','customer_id')
 ]
 
 feature_matrix, feature_defs = ft.dfs(
-    entities=entities,
-    relationships=relationships,
-    target_entity='customers')
+entities=entities,
+relationships=relationships,
+target_entity='customers')
 </code></pre>
+
 <p>First we define the entities in our database, which in our case are customers and orders. Next we define how orders are related to customers. The customer is the parent entity (one) and orders is the child entity (many).</p>
 <p>We then ask FeatureTools to build a dataset for us, where we choose customers as the target entity. This tells FeatureTools to produce a dataset with customer as the parent and engineer features from orders as observations related to each customer.</p>
 <p>As you can see, FeatureTools is especially useful when you have a large database with many tables and you need to extract a machine learning dataset from that database. It also works great on temporal data.</p>
@@ -65,23 +68,23 @@ feature_matrix, feature_defs = ft.dfs(
 explainer = LimeImageExplainer()
 
 explanation = explainer.explain_instance(
-    image, 
-    keras_model.predict, 
-    top_labels=5, 
-    hide_color=0
-    num_samples=1000)
-    
+image,
+keras_model.predict,
+top_labels=5,
+hide_color=0
+num_samples=1000)
 
-from skimage.segmentationskimage  import mark_boundaries
+from skimage.segmentationskimage import mark_boundaries
 
 temp, mask = explanation.get_image_and_mask(
-    295, 
-    positive_only=True, 
-    num_features=5,
-    hide_rest=False)
-    
+295,
+positive_only=True,
+num_features=5,
+hide_rest=False)
+
 plt.imshow(mark_boundaries(temp / 2 + 0.5, mask))
 </code></pre>
+
 <p>First we create a new explainer for our image classifier. Then we let it explain the classification for a specific image. This produces an explanation object that we can visualize.</p>
 <p><img src="/content/images/2018/08/explainer.png" alt="Explainer output"></p>
 <p>The visualization is done using matplotlib. Using the <code>mark_boundaries</code> method we can highlight the edges of the area that explains why our image was classified the way it is.</p>

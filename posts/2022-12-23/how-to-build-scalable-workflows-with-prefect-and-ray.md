@@ -1,9 +1,10 @@
 ---
 title: How to build scalable workflows with Prefect and Ray
 category: Machine Learning
-datePublished: '2022-12-23'
-dateCreated: '2022-12-23'
+datePublished: "2022-12-23"
+dateCreated: "2022-12-23"
 ---
+
 In the past weeks we've been working on a new computer vision project at Aigency.
 As part of the project we have to process images using OpenCV image filters. This
 is a rather tedious process that takes a lot of time, so we made a nice workflow
@@ -16,7 +17,7 @@ As many will know, machine-learning and data engineering projects often use pipe
 workflows or DAGS to process large amounts of data. There are plethora of tools out there
 to perform machine learning and data processing tasks.
 
-At Aigency we've used a number of different tools like Azure Synapse, Spark, and 
+At Aigency we've used a number of different tools like Azure Synapse, Spark, and
 Airflow. Azure Synapse and Spark are on the large end of the spectrum and quite
 expensive. Airflow can be used for large projects, but we used it mostly for smaller
 things.
@@ -45,7 +46,7 @@ chains together multiple tasks. Tasks are written as python methods decorated
 with `@task`.
 
 To run a workflow, you can run it from the command line using python. It will then
-run on your local machine of course. 
+run on your local machine of course.
 
 When you're happy with the workflow, you can deploy it to a Prefect server.
 This allows the workflow to be scheduled.
@@ -95,7 +96,7 @@ def collect_results(results: List[ProcessingResult]) -> None:
 def tune_pipeline(input_folder: str) -> None:
     image_files = find_images(input_folder)
     run_settings = generate_run_settings(num_experiments, space)
-    
+
     image_files = [image_files for _ in range(num_experiments)]
 
     results = process_images.map(image_files, run_settings)
@@ -112,8 +113,8 @@ First, notice that we parameterized the workflow with the input folder. We provi
 a default value for it in the script. However, when you deploy the workflow to the
 Prefect server, you can specify it in configuration.
 
-Next, In the `tune_pipeline` we call the method `map` on the `process_images` function 
-as if it were an object. We can do this because the `@task` decorator turned it 
+Next, In the `tune_pipeline` we call the method `map` on the `process_images` function
+as if it were an object. We can do this because the `@task` decorator turned it
 into a `Task` that we can manipulate. The `map` method will iterate over lists
 of parameters and call the underlying method with the values in the lists.
 
@@ -123,19 +124,19 @@ task, in this case `collect_results`, Prefect will automatically wait for all th
 to arrive and unwrap them for you.
 
 When you run the workflow code without any additional configuration, you'll notice
-that it is trying to paralellize the `process_images` task. It sort of works, 
+that it is trying to paralellize the `process_images` task. It sort of works,
 but isn't very ideal.
 
 It's time to something about that.
 
 ## What is Ray?
 
-Prefect uses a task runner to run each of the tasks in a flow. By default it uses a `ConcurrentTaskRunner`. 
+Prefect uses a task runner to run each of the tasks in a flow. By default it uses a `ConcurrentTaskRunner`.
 It works, but not for huge amounts of tasks. It sometimes fails for unclear reasons.
 You have options to use other task runners, like Ray.
 
 Ray is a distributed runtime for Python often used in machine learning projects because it's
-capable of training models in a distributed fashion too. 
+capable of training models in a distributed fashion too.
 
 Ray has two primitives: Tasks, and Actors. A task is a stateless function, can accept input and can produce output.
 An actor is a class with state running on a Ray node.
@@ -195,7 +196,7 @@ If you have to work with large amounts of data, we recommend storing it on disk
 and pass along a filename. We also recommend keeping tasks together that
 require the same large dataset so you don't have to shuffle data around as much.
 
-###  Write unit-tests
+### Write unit-tests
 
 Yes, that's a thing, I know a lot of data scientists never hear of these :P
 Since you can run the workflow locally, you can write unit-tests for your

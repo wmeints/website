@@ -1,31 +1,34 @@
 ---
-title: 'Quarkus: Java revisited!'
+title: "Quarkus: Java revisited!"
 category: Java
-datePublished: '2023-04-04'
-dateCreated: '2023-04-04'
+datePublished: "2023-04-04"
+dateCreated: "2023-04-04"
 ---
+
 Okay, I’m going to be honest here. I’m not a huge fan of Java. The language feels a bit behind what Kotlin and C# are offering these days. Although I have to admit that it has gotten some pretty nice improvements. I’m also a bit tired of Java because most frameworks are bloated and slow.
 
-After years of trying to get away from Java I figured I should give it another try. After reading what Quarkus has to offer I was happy to give Java another try. It turns out, Java is still pretty cool despite what I just wrote. 
+After years of trying to get away from Java I figured I should give it another try. After reading what Quarkus has to offer I was happy to give Java another try. It turns out, Java is still pretty cool despite what I just wrote.
 
 In this quickstart guide to Quarkus, I'll take you through the steps of creating a new Quarkus project, exploring its extensions and building business logic with Domain Driven Design (DDD) principles. I’ll show you how to build a basic aggregate, add command handlers and integrate various components to create a DDD-oriented microservice in Quarkus.
 
 Whether you're a seasoned Java developer or just getting started, this guide will provide a straightforward introduction to Quarkus and its capabilities. So why wait? Let's dive in and see what Quarkus can do for you!
 
 ## What is Quarkus?
+
 When it comes to building microservices, Java isn’t exactly my favorite. Many frameworks out there have a long startup time and are huge in terms of memory consumption. It’s a pity really, because Java can be quite productive with the right tools.
 
 Quarkus is a framework that’s different from your typical Java framework:
 
-* First, It allows you to compile your microservice as a native executable so your service is lightning fast.
-* Next, it has a compile-time dependency injection mechanism that’s fast and consumes less memory.
-* Finally, it features a very large collection of extensions for all the typical things you expect a microservice framework to provide. 
+- First, It allows you to compile your microservice as a native executable so your service is lightning fast.
+- Next, it has a compile-time dependency injection mechanism that’s fast and consumes less memory.
+- Finally, it features a very large collection of extensions for all the typical things you expect a microservice framework to provide.
 
 The framework is based on popular Jakarta EE standards. Jakarta is a combination of standards for various things like RESTful services, persistence, monitoring, reactive messaging, and more. It’s a solid standard which means that you can expect a solid performance from Quarkus.
 
 As with all things though, the proof of the pudding is in eating it. So let’s build a microservice with Quarkus and explore what it has to offer.
 
 ## Creating a new Quarkus project
+
 Quarkus has a nice command line interface that makes quick work of creating a microservice application. You can use the following command to create a new microservice:
 
 ```
@@ -42,12 +45,13 @@ There are a ton of extensions available that you can add through the command lin
 quarkus ext add <identifier>
 ```
 
-There are many extensions to choose from. If you're interested in learning more, check out the website: https://quarkus.io/extensions/. 
+There are many extensions to choose from. If you're interested in learning more, check out the website: https://quarkus.io/extensions/.
 We'll cover some of the extensions in the next sections as we build the microservice.
 
 Now that we have a project, let’s look at building some business logic for the microservice.
 
 ## Application architecture
+
 The application that I’m working on sells subscriptions for coffee beans. As part of the microservice application, I have a product catalog microservice that stores product information. It follows the structure that you see in the following picture.
 
 ![Architecture pattern used for the microservice](/content/images/2023/04/04/tastybeans-application-structure.drawio.png)
@@ -57,6 +61,7 @@ HTTP requests are sent to a Resource class, which invokes one of the command han
 Let’s first look at the aggregate to understand what happens when I send a command to it.
 
 ## Building a basic aggregate
+
 The main aggregate in this microservice is the Product aggregate which looks like this:
 
 ```
@@ -103,7 +108,7 @@ public class Product extends AggregateRoot {
         this.specifcation = productRegistered.specification();
         this.unitPrice = productRegistered.unitPrice();
     }
-    
+
     // Let out getters/setters
 }
 ```
@@ -143,6 +148,7 @@ The second extension adds a JDBC driver and configuration for Postgresql to my m
 Now that we have the domain layer, let’s look at adding command handlers next.
 
 ## Adding a command handler
+
 The command handler in our microservice connects domain logic to application services. It composes domain logic into application logic. For the register method on the Product aggregate we can implement the following command handler:
 
 ```
@@ -159,10 +165,10 @@ public class RegisterProductCommandHandler {
 
     public Product handle(RegisterProduct cmd) {
         var product = Product.register(cmd);
-        
+
         projectionEngine.apply(product.getPendingDomainEvents());
         productRepository.persist(product);
-        
+
         return product;
     }
 }
@@ -170,11 +176,12 @@ public class RegisterProductCommandHandler {
 
 In the handle method we take the `RegisterProduct` command and send it to the `Product` aggregate. The `Product` aggregate then does its magic and produces domain events. When we’re done modifying the aggregate, we’ll take the generated domain events and send them to the projection engine for further processing into, for example, integration events and read models. When that’s done, we call the `ProductRepository` to save the aggregate.
 
-Quarkus uses inversion of control, so it knows how to inject instances of beans into other beans. This is demonstrated in the command handler where I’ve marked the constructor with `@Inject` and the class with `@ApplicationScoped`. The `@Inject` annotation tells Quarkus to look for an instance of the `ProjectionEngine` and the `ProductRepository` so I can use it in the command handler. 
+Quarkus uses inversion of control, so it knows how to inject instances of beans into other beans. This is demonstrated in the command handler where I’ve marked the constructor with `@Inject` and the class with `@ApplicationScoped`. The `@Inject` annotation tells Quarkus to look for an instance of the `ProjectionEngine` and the `ProductRepository` so I can use it in the command handler.
 
 It’s requires few lines of code to combine various components together to build a DDD-oriented microservice in Quarkus. The strength of inversion of control gets even better in the next section when we look at the `ProjectionEngine` class.
 
 ## Creating the projection engine
+
 The projection engine is responsible for mapping the domain events to event handlers. I can send the list of events generated by the aggregate to the ProjectionEngine and it will take care of the rest.
 
 The `ProjectionEngine` class doesn’t handle the events itself, it wants a `Projection` for each type of event to delegate the projection logic to. So, I need to inject a list of `Projection` instances into the `ProjectionEngine` constructor.
@@ -215,6 +222,7 @@ public class ProjectionEngineImpl implements ProjectionEngine {
 The code above is delightful. Just give me a list of things and we’re up and going. One of the projections that I've added in my microservice a projection that's going to translate domain events to integration events to send over RabbitMQ. I'm going to skip over the projection code itself because I rather show you what the integration with RabbitMQ looks like in Quarkus.
 
 ## Sending integration events over RabbitMQ
+
 I mentioned extensions in the beginning of this post. Let’s add one to the application: quarkus-smallrye-reactive-messaging-rabbitmq with the following command:
 
 ```
@@ -257,7 +265,7 @@ public class IntegrationEventPublisherImpl implements IntegrationEventPublisher 
 }
 ```
 
-In the `IntegrationEventPublisher` we have an `Emitter<Object>` instance marked with `@Outgoing` in the constructor. This emitter will send any data that we give it to the *outgoing-integration-events* channel. 
+In the `IntegrationEventPublisher` we have an `Emitter<Object>` instance marked with `@Outgoing` in the constructor. This emitter will send any data that we give it to the _outgoing-integration-events_ channel.
 
 To get the data to a topic on RabbitMQ we need to map the outgoing channel to a RabbitMQ adapter. I’ve added a few lines of configuration to the application.properties file for this:
 
@@ -285,7 +293,8 @@ In the send method in the IntegrationEventPublisher, I grab this annotation and 
 The code for sending events over RabbitMQ isn’t too complicated. All I needed to do was to introduce a way to set the right routing key for each outgoing event. This routing key is, as I mentioned, important as we’ll see in the next section.
 
 ## Receiving integration events from RabbitMQ
-We’ve talked about sending integration events to RabbitMQ in the previous section, let’s receive some events from RabbitMQ in this section. 
+
+We’ve talked about sending integration events to RabbitMQ in the previous section, let’s receive some events from RabbitMQ in this section.
 
 First, we’ll need to set up the IntegrationEventConsumer class:
 
@@ -341,10 +350,10 @@ mp.messaging.incoming.incoming-integration-events.exchange.name=integration-even
 
 Let me explain what each of the lines mean:
 
-* The first line connects the channel to RabbitMQ. 
-* The second line tells Quarkus for which routing keys we’ll accept messages. 
-* The third line tells which queue we want to receive messages from. 
-* The fourth line connects the queue to the integration-events exchange that we used earlier.
+- The first line connects the channel to RabbitMQ.
+- The second line tells Quarkus for which routing keys we’ll accept messages.
+- The third line tells which queue we want to receive messages from.
+- The fourth line connects the queue to the integration-events exchange that we used earlier.
 
 In the handle method we’re going to try and map the incoming event to an IntegrationEventHandler class. We use some clever mapping here to find out where to route the event in the application.
 I can recommend you look at the reactive messaging with RabbitMQ guide to get a more complete picture of what reactive messaging looks like and how RabbitMQ integrates with it: https://quarkus.io/guides/rabbitmq-reference
@@ -352,6 +361,7 @@ I can recommend you look at the reactive messaging with RabbitMQ guide to get a 
 One more thing to do, and that’s to create a REST interface for our microservice.
 
 ## Creating a REST interface in Quarkus
+
 For REST interfaces we have a couple of options in Quarkus. You can go the reactive route or the good old regular code route. I went with the latter because I wasn’t in the mood to go reactive today.
 
 You can add so-called Resource classes to your microservice to map incoming HTTP requests to business logic. This is what that looks like:
@@ -391,7 +401,8 @@ Quarkus REST interfaces are based on the JAX-RS standard. If you’re interested
 
 Building REST interfaces with JAX-RS is similar to building controllers in ASP.NET core and controllers in Spring Web.
 
-##  Running a Quarkus microservice in development
+## Running a Quarkus microservice in development
+
 I’m going to skip over testing for now as it requires a full blog post on its own. Let’s instead look at how you can quickly iterate over your code with the live reload feature in Quarkus as I think that’s one of the key things that makes Quarkus so nice to work with.
 
 You can start a microservice with the following command:
@@ -404,7 +415,7 @@ This command does a couple of things:
 
 1. First, it will boot up Docker containers for various things you’re using. For example, if you use the Postgresql JDBC driver, it will spin up a Postgres container for you. If you use the RabbitMQ integration, it will spin up a RabbitMQ container. Note: If you have multiple Quarkus apps running in dev mode, it will share the RabbitMQ instance automatically so you can integration test multiple microservices.
 2. Next, it will boot up your microservice with live reload enabled. When code changes, the application is either restarted or classes are replaced depending on what the change was. No need to restart or any of that nonsense.
-3. Finally, it will start a process that watches for changing unit-tests. When you change a test, Quarkus will automatically run the unit-test for you. When you press R on the command line, it will run all tests for you. 
+3. Finally, it will start a process that watches for changing unit-tests. When you change a test, Quarkus will automatically run the unit-test for you. When you press R on the command line, it will run all tests for you.
 
 The container behavior is controlled by dev services, a feature in Quarkus that makes it easier for developers to work on microservices on their development machines. Dev services get automatically configured for you if you didn’t specify connection strings yourself. If you have a connection string for your database and connection settings for RabbitMQ, the existing instances are used.
 
@@ -412,18 +423,17 @@ I think the dev command is a great addition to Quarkus. It works well with edito
 
 ## Other tips and tricks
 
-There are too many features to name in a single post so I may have to write more about Quarkus in the future. I wanted to leave you with  a few features that I think are worth checking out once you’ve build some initial logic in your microservice:
+There are too many features to name in a single post so I may have to write more about Quarkus in the future. I wanted to leave you with a few features that I think are worth checking out once you’ve build some initial logic in your microservice:
 
-* Quarkus Flyway extension: This extension makes it possible to write SQL migrations that get applied during startup of your microservice. I think this is a must have if you’re serious about microservices and relational databases.
-* Quarkus OpenAPI extension: This extension allows you to expose an OpenAPI specification of your service. It makes it just a little bit easier for other developers to integrate with your microservice.
-* Quarkus Micrometer extension: Modern microservices often expose metrics to make it easier to learn about bottlenecks in your microservice landscape. This extension makes adding metrics easier.
-* Quarkus Smallrye Health: This extension adds health checks to your service. Essential if you’re running on Kubernetes!
+- Quarkus Flyway extension: This extension makes it possible to write SQL migrations that get applied during startup of your microservice. I think this is a must have if you’re serious about microservices and relational databases.
+- Quarkus OpenAPI extension: This extension allows you to expose an OpenAPI specification of your service. It makes it just a little bit easier for other developers to integrate with your microservice.
+- Quarkus Micrometer extension: Modern microservices often expose metrics to make it easier to learn about bottlenecks in your microservice landscape. This extension makes adding metrics easier.
+- Quarkus Smallrye Health: This extension adds health checks to your service. Essential if you’re running on Kubernetes!
 
-## Summary 
+## Summary
+
 And that’s it, my first DDD inspired microservice with Quarkus. I know I covered a lot of ground in a very short amount of time. But I think you’ll find that the guides on the Quarkus website offer plenty of additional explanation to get you going.
 
 I hope I inspired you to give this framework a try!
 
 The source code for my demo project is [up on Github](https://github.com/wmeints/tastybeans-quarkus).
-
-

@@ -1,9 +1,10 @@
 ---
 title: Bring your deep learning models to production with CNTK on Java
 category: Machine Learning
-datePublished: '2018-03-28'
-dateCreated: '2018-03-28'
+datePublished: "2018-03-28"
+dateCreated: "2018-03-28"
 ---
+
 <!--kg-card-begin: markdown--><p>If you're looking to bring your deep learning to production you should definitely take a look at CNTK. It offers a great Python and Java API so you get the most out of your model.</p>
 <p>In this article I will show you how you can build a neural network with Microsoft Cognitive Toolkit. Then I will also show you how to use it in a Java application.</p>
 <h2 id="whyamishowingthisinthefirstplace">Why am I showing this in the first place?</h2>
@@ -29,6 +30,7 @@ labels = C.input_variable(y.shape[1])
 z = C.layers.Dense(32, activation=C.ops.relu)(features)
 z = C.layers.Dense(10, activation=C.ops.relu)(z)
 </code></pre>
+
 <p>A neural network in CNTK is a mathematical function, which it is in the real world too. CNTK isn’t taking that away from you. It does offer a few shortcuts to make things simpler. Instead of defining each layer in the neural network as a complex formula, CNTK lets me define a layer as Dense.</p>
 <p>CNTK follows a functional approach whenever it can, which matches the mathmatical approach. So when you invoke Dense, you have to provide the parameters to define the layer. This gives back a function that accepts one parameter that is the input for the layer. The result of this function is the output of the dense layer connected to the provided input. Essentially, a graph.</p>
 <p>I can chain the output of my first layer to the next layer by providing it as the input for the second layer. Again, I first construct the layer function by invoking Dense. Then I invoke the layer function with the output of the first layer. This creates a new graph, that connects the first graph to the new layer.</p>
@@ -47,6 +49,7 @@ accuracy = C.metrics.classification_error(z, labels)
 
 trainer = C.train.Trainer(z, (loss, accuracy), learners)
 </code></pre>
+
 <p>Next step is to invoke the trainer with samples to optimize the neural network.</p>
 <p>CNTK is strictly about deep learning, it doesn’t feature anything related to data. You have to use numpy and tools like scikit-learn for this.</p>
 <p>Lucky for us, scikit-learn contains a standard dataset for labeled handwritten digits. We’re going to load this dataset and use that to train our model.</p>
@@ -57,6 +60,7 @@ X = digits.images.reshape((len(digits.images), -1)).astype(np.float32)
 y = digits.target
 y = np.eye(10)[y]
 </code></pre>
+
 <p>First we import the package for the datasets and grab the digits dataset. This dataset is in a format that doesn’t work directly with CNTK. So we have to modify it a little bit.</p>
 <p>We take the images from the digits dataset and reshape it so that the pixels of each image are concatenated into one large feature vector. The number of rows in the dataset remains the same.</p>
 <p>The labels are a bit more work. Each image in the digit dataset has a number associated with it. The number the image represents. Our neural network however can’t work with this. It needs to have a vector of 10 elements, where each element represents the digit that the input represents. So when you have the number three, the third element in the vector is set to one, while the others are set to zero.</p>
@@ -87,11 +91,12 @@ y = np.eye(10)[y]
 <pre><code class="language-python">progress_printer = C.logging.progress_print.ProgressPrinter(first=0, freq=5)
 
 logging_callbacks = [
-    progress_printer
+progress_printer
 ]
 
 trainer = C.train.Trainer(z, (loss, accuracy), learners, progress_writers=logging_callbacks)
 </code></pre>
+
 <p>First create a new instance of ProgressPrinter and specify the frequency at which the progress should be reported. Next, build a list of progress_writers that you want to add to your trainer.</p>
 <p>Finally, modify the trainer so that it includes the list of progress writers to use.</p>
 <p>Now when you run the training logic again, you will see output on the console that looks similar to this:</p>
@@ -123,17 +128,18 @@ trainer = C.train.Trainer(z, (loss, accuracy), learners, progress_writers=loggin
 <pre><code class="language-python">scores = []
 
 for n_batch in range(num_test_batches):
-    X_batch = X_train[n_batch*32:n_batch*32+32]
-    y_batch = y_train[n_batch*32:n_batch*32+32]
-    
+X_batch = X_train[n_batch*32:n_batch*32+32]
+y_batch = y_train[n_batch*32:n_batch*32+32]
+
     score = trainer.test_minibatch({ features: X_batch, labels: y_batch })
-    
+
     scores.append(score)
 
 final_score = np.mean(scores)
 
 print(final_score)
 </code></pre>
+
 <p>The sample code uses minibatches, just like the training procedure. Remember, not all of our images fit into memory easily. So we have to run the test procedure in mini batches.</p>
 <p>Because we use minibatches we have to record all the evaluation scores in a list and calculate the mean to get the final score.</p>
 <p>Remember that evaluation function we plugged into our trainer? This evaluation function is used when you invoke test_minibatch and returns a single scalar value between zero and one to indicate the accuracy of our model.</p>
@@ -177,8 +183,10 @@ public class ClassifyImageController {
                     .body(new GenericError(&quot;Failed to process image.&quot;));
         }
     }
+
 }
 </code></pre>
+
 <p>The REST controller in this case is rather basic. It accepts an image upload over HTTP. The incoming JPEG file is automatically decoded by an image decoder component. The result of this decoding operation is fed to our model.</p>
 <p>The image decoding component loads the JPEG file, resizes and crops the picture to the right dimensions that we expect in our model and then concatenates all pixels to a single feature vector. Just like we did in python.</p>
 <p>The interesting bit is in the DigitClassifier component that we use. We’re going to use the CNTK bindings for Java to load our model and use it to predict digits from images uploaded by the user. The classifier has a static method called create, which looks like this:</p>
@@ -187,8 +195,10 @@ public class ClassifyImageController {
     Function modelFunction = Function.load(&quot;model.onnx&quot;, device, ModelFormat.ONNX);
 
     return new DigitClassifierImpl(modelFunction, device);
+
 }
 </code></pre>
+
 <p>The first line in the create method creates a new device descriptor for the function that is loaded on the second line. We use the CPU for predictions instead of the GPU. We could of course use the GPU to make predictions. But it is not necessary as the CPU is fast enough for predicting classes.</p>
 <p>The result of the create method is a new DigitClassifierImpl instance with the device descriptor and function preloaded.</p>
 <p>Let’s look at how the classifier actually makes a prediction:</p>
@@ -216,8 +226,10 @@ public class ClassifyImageController {
     float[] scores = getValuesFromVector(outputRecord);
 
     return argMax(scores);
+
 }
 </code></pre>
+
 <p>The method for making a prediction is rather long. Let’s go through it step by step.</p>
 <p>The first two lines extract the input and output variable of our neural network. These are symbolic, you have to look at these as pure pointers. Keep in mind, CNTK is a native library with layers around it for Python, Java and C#. You only work with pointers towards the data. Everything else happens out of view.</p>
 <p>The three next lines deals with creating a batch of data. CNTK uses FloatVector to build a single row of data and FloatVectorVector to combine multiple FloatVector instances into a matrix or table.</p>

@@ -1,11 +1,14 @@
 ---
 title: Turn your application into a graph computation engine
 category: Other
-datePublished: '2015-10-19'
-dateCreated: '2017-07-31'
+datePublished: "2015-10-19"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Sometimes I come across a subject that doesn't really fancy my interest. Either because I absolutely don't see any<br>
+
 application for a particular piece of technology or because I simply don't have enough time to take a closer look.</p>
+
 <p>Graphs is one of of those things that just didn't grab my attention until a few weeks ago. But now that I have seen<br>
 the amount of fuss around this subject I think I should have looked into it a bit earlier.</p>
 <p>Like a lot of IT related things, graph computation isn't something new. I looked it up on Wikipedia and it's actually<br>
@@ -87,6 +90,7 @@ epke.addEdge(&quot;won&quot;, gold)
 marianne.addEdge(&quot;won&quot;, gold)
 marit.addEdge(&quot;won&quot;, silver)
 </code></pre>
+
 <p>addVertex creates a new vertex with a label. You can attach properties to them using the <code>property(key,value)</code> method.<br>
 To connect to nodes in the graph call the <code>addEdge method with a label and target vertex</code>. Edges can also have properties.</p>
 <p>Now that you have some data, let's do something with it. Let's find out who won a medal:</p>
@@ -136,9 +140,10 @@ marianne.addEdge(&quot;won&quot;, gold);
 marit.addEdge(&quot;won&quot;, silver);
 
 GraphTraversal&lt;Vertex, Map&lt;String, Object&gt;&gt; medalsWonByParticipants =
-        graph.traversal().V().hasLabel(&quot;Gold&quot;, &quot;Silver&quot;, &quot;Bronze&quot;).as(&quot;medal&quot;)
-                .in(&quot;won&quot;).as(&quot;participant&quot;).select(&quot;medal&quot;, &quot;participant&quot;);
+graph.traversal().V().hasLabel(&quot;Gold&quot;, &quot;Silver&quot;, &quot;Bronze&quot;).as(&quot;medal&quot;)
+.in(&quot;won&quot;).as(&quot;participant&quot;).select(&quot;medal&quot;, &quot;participant&quot;);
 </code></pre>
+
 <p>The first lines are especially interesting. Using the titan factory I created a new configuration<br>
 that connects to Cassandra on localhost and ElasticSearch also running on my local machine.</p>
 <p>With the connection made to the graph I can add vertices and edges. And finally I can run gremlin queries against the graph.<br>

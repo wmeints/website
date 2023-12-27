@@ -1,9 +1,10 @@
 ---
-title: 'Embedded AI: The Nvidia Jetson TX1 - Part 1'
+title: "Embedded AI: The Nvidia Jetson TX1 - Part 1"
 category: Machine Learning
-datePublished: '2017-11-09'
-dateCreated: '2017-11-09'
+datePublished: "2017-11-09"
+dateCreated: "2017-11-09"
 ---
+
 <!--kg-card-begin: markdown--><p>Every once in a while you run across something that you just have to have. I bumped into a cool little device, the Nvidia Jetson TX1. This is a creditcard size AI computer that looks to be fun. So I had to try it.</p>
 <h2 id="firstlooksmaybedeceiving">First looks may be deceiving</h2>
 <p>I ordered the kit online throug the Nvidia developer program, because they offered a one time discount on the developer kit. It makes it a little easier on the wallet. It costs 250 euro with the discount, 600 without.</p>

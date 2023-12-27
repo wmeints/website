@@ -1,9 +1,10 @@
 ---
 title: 5 easy steps to start editing python notebooks over SSH
 category: Python
-datePublished: '2017-11-06'
-dateCreated: '2017-11-06'
+datePublished: "2017-11-06"
+dateCreated: "2017-11-06"
 ---
+
 <!--kg-card-begin: markdown--><p>When you work with Linux machines on Amazon EC2 or Azure over SSH and want to edit interactive python code you've got a challenge. There is vim and other console based editors, but that might not be what you want. Here's how you can edit python code in your browser over SSH in 5 steps.</p>
 <h2 id="step1installjupyteronyourremotemachine">Step 1: Install jupyter on your remote machine</h2>
 <p>Jupyter is a webbased python editor that works with notebooks. Notebooks are interactive pieces of python mixed with markdown code.</p>

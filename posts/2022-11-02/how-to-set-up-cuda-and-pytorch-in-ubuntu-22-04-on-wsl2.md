@@ -1,18 +1,19 @@
 ---
 title: How to set up CUDA and PyTorch in Ubuntu 22.04 on WSL2
 category: Machine Learning
-datePublished: '2022-11-02'
-dateCreated: '2022-11-02'
+datePublished: "2022-11-02"
+dateCreated: "2022-11-02"
 ---
+
 Working with machine-learning code in Windows can be quite a hassle. Often I run into problems with my tools not working properly on Windows. Recently, I even decided to convert my laptop to Ubuntu 22.04 for the time being. Which is really nice for data sciency stuff, but not great for my Powerpoint and Excel since LibreOffice sucks big time. Needless to say, I needed another solution. Especially for my deep learning setup.
 
-In this quick post I'll show you how I configured my Ubuntu 22.04 installation on Windows 11 to run CUDA and PyTorch. 
+In this quick post I'll show you how I configured my Ubuntu 22.04 installation on Windows 11 to run CUDA and PyTorch.
 
 ## Configuring Ubuntu with WSLg on Windows 11
 
-The key to running deep learning frameworks like PyTorch on Windows 11 is the WSLg extension. This extension allows WSL2 to use your GPU. This works for Intel, AMD, and Nvidia GPUs. It's still in preview so  it may contain bugs. So far though I haven't experienced anything blocking to be honest.
+The key to running deep learning frameworks like PyTorch on Windows 11 is the WSLg extension. This extension allows WSL2 to use your GPU. This works for Intel, AMD, and Nvidia GPUs. It's still in preview so it may contain bugs. So far though I haven't experienced anything blocking to be honest.
 
-To install the WSLg extension, you can follow the instructions in the [WSLg repository on Github](https://github.com/microsoft/wslg). 
+To install the WSLg extension, you can follow the instructions in the [WSLg repository on Github](https://github.com/microsoft/wslg).
 After installing WSLg, you can go ahead and install Ubuntu 22.04 from the [Windows store](https://www.microsoft.com/store/productId/9PDXGNCFSCZV).
 
 With WSL configured and Ubuntu installed, let's move on to installing the CUDA toolkit
@@ -24,7 +25,7 @@ The key here is to get the right CUDA installation.
 
 WSLg maps your GPU driver from Windows in the Ubuntu installation. There's a specific libcuda version installed in the OS that routes all commands to the GPU in your host system. If you install the regular CUDA toolkit in Ubuntu on WSL2 you'll overwrite the libcuda file with one that isn't routed. That'll break the installation.
 
-The correct way to install CUDA on WSL can be found in the [Nvidia manual](https://docs.nvidia.com/cuda/wsl-user-guide/index.html). 
+The correct way to install CUDA on WSL can be found in the [Nvidia manual](https://docs.nvidia.com/cuda/wsl-user-guide/index.html).
 
 I'm using PyTorch 1.13 which needs CUDA 11.7, so I downloaded the [CUDA toolkit for WSL-Ubuntu](https://developer.nvidia.com/cuda-11-7-1-download-archive?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0&target_type=deb_local) from the developer site. The website provides neat instructions on how to install the toolkit. It takes, depending on your connection, a few minutes to download all the files.
 
@@ -32,7 +33,7 @@ After installing the CUDA toolkit, you can now download PyTorch.
 
 ## Installing PyTorch
 
-There are several ways to install PyTorch. I've found that Anaconda is rather broken these days, so I prefer to install PyTorch using pip. 
+There are several ways to install PyTorch. I've found that Anaconda is rather broken these days, so I prefer to install PyTorch using pip.
 
 A clean installation of Ubuntu 22.04 doesn't have Python 3.x installed yet. You'll need to install it using the following command:
 

@@ -1,12 +1,15 @@
 ---
-title: 'Machine learning tools: Data lakes and what you know about them'
+title: "Machine learning tools: Data lakes and what you know about them"
 category: Machine Learning
-datePublished: '2016-03-14'
-dateCreated: '2017-07-31'
+datePublished: "2016-03-14"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Machine Learing tools come in many shapes and sizes. One of the trends in the<br>
+
 past few years has been the data lake. But what is a data lake, how does it<br>
 relate to machine learning and why should you care?</p>
+
 <!-- more -->
 <h2 id="whatisadatalake">What is a data lake</h2>
 <p>Metaphorically a data lake is a giant pool of data from which you can draw insights.<br>

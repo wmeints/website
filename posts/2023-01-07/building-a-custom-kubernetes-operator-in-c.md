@@ -1,9 +1,10 @@
 ---
 title: Building a custom Kubernetes operator in C#
 category: .NET
-datePublished: '2023-01-07'
-dateCreated: '2023-01-07'
+datePublished: "2023-01-07"
+dateCreated: "2023-01-07"
 ---
+
 Setting up environments in Kubernetes can be done in quite a few ways. You can use Helm, plain manifests, Kustomize and
 custom-built CLI tools. But what are you going to do after you’ve configured the environment? This is one of the
 questions I had when I tried to set up an MLOps environment in Kubernetes with Prefect and Ray.
@@ -14,20 +15,21 @@ environment in Kubernetes.
 Before we dive into building an operator, let’s take a step back and look at how Kubernetes manages a cluster.
 
 ## How Kubernetes manages a cluster
+
 Kubernetes uses persistent objects to define the state of a cluster. These objects are all stored in etcd, a key-value
 store. Objects can describe a number of things, for example:
 
-* Containerized applications using Pods, and Deployments.
-* Network resources such as Services.
-* Policies to manage how applications behave and who has access to objects.
+- Containerized applications using Pods, and Deployments.
+- Network resources such as Services.
+- Policies to manage how applications behave and who has access to objects.
 
 Each of the objects in Kubernetes has three parts:
 
-* Metadata, defines identifying information
-* Spec, defines the desired configuration for the object
-* Status, defines the current status of the object
+- Metadata, defines identifying information
+- Spec, defines the desired configuration for the object
+- Status, defines the current status of the object
 
-When you’ve used Kubernetes before, you remember that you can define objects through YAML files. You can then upload 
+When you’ve used Kubernetes before, you remember that you can define objects through YAML files. You can then upload
 these files using `kubectl apply -f <filename>` to one of the master nodes to store them.
 
 Whenever you define an object, you're telling Kubernetes about a desired state. It takes time for Kubernetes to realize
@@ -45,11 +47,12 @@ Another way in which a controller can operate is to control resources. For examp
 will directly control the container runtime to place pods.
 
 ## About custom controllers and operators
+
 Let's say, you want to create your own controller. For example, you have a bunch of resources for a machine-learning
-environment and you want to manage those resources without writing a ton of YAML. 
+environment and you want to manage those resources without writing a ton of YAML.
 
 You can create your own custom objects in Kubernetes and manage them using a controller. For this to happen you need to
-write an operator. 
+write an operator.
 
 An operator is an application that runs inside the cluster containing one or more controllers. Each of the controllers,
 monitors objects that are defined using a custom resource definition.
@@ -71,52 +74,52 @@ spec:
     singular: workspace
   scope: Namespaced
   versions:
-  - name: v1alpha1
-    schema:
-      openAPIV3Schema:
-        properties:
-          spec:
-            properties:
-              workflows:
-                properties:
-                  image:
-                    type: string
-                  agentPools:
-                    items:
-                      properties:
-                        name:
-                          type: string
-                        image:
-                          type: string
-                        replicas:
-                          format: int32
-                          type: integer
-                      type: object
-                    minItems: 1
-                    type: array
-                  controllerReplicas:
-                    exclusiveMinimum: false
-                    format: int32
-                    minimum: 1
-                    type: integer
-                  databaseReplicas:
-                    exclusiveMinimum: false
-                    format: int32
-                    minimum: 1
-                    type: integer
-                type: object
-            type: object
-        type: object
-    served: true
-    storage: true
+    - name: v1alpha1
+      schema:
+        openAPIV3Schema:
+          properties:
+            spec:
+              properties:
+                workflows:
+                  properties:
+                    image:
+                      type: string
+                    agentPools:
+                      items:
+                        properties:
+                          name:
+                            type: string
+                          image:
+                            type: string
+                          replicas:
+                            format: int32
+                            type: integer
+                        type: object
+                      minItems: 1
+                      type: array
+                    controllerReplicas:
+                      exclusiveMinimum: false
+                      format: int32
+                      minimum: 1
+                      type: integer
+                    databaseReplicas:
+                      exclusiveMinimum: false
+                      format: int32
+                      minimum: 1
+                      type: integer
+                  type: object
+              type: object
+          type: object
+      served: true
+      storage: true
 ```
 
 The code above shows what a typical custom resource definition looks like. There are three parts that are important to
 a custom resource definition:
 
-* The group, you’ll need to define your unique group for the custom object
-* The kind of object that the resource definition represents
-* The schema for the custom object
+- The group, you’ll need to define your unique group for the custom object
+- The kind of object that the resource definition represents
+- The schema for the custom object
 
 You can create the schema for the custom object using OpenAPI. Most people will know OpenAPI as Swagger. You can check
 [this site][OPENAPI_TUTORIAL] for a for a full tutorial on OpenAPI schemas.
@@ -139,14 +142,14 @@ spec:
     databaseReplicas: 1
     agentPools:
       - name: default
-        replicas: 1   
+        replicas: 1
 ```
 
 Using kubectl apply to submit the custom resource does a number of things:
 
-* It runs the OpenAPI validation against the object
-* If you have custom webhooks defined for the object, those will get run
-* It creates the custom object in the cluster
+- It runs the OpenAPI validation against the object
+- If you have custom webhooks defined for the object, those will get run
+- It creates the custom object in the cluster
 
 And that’s where the story ends, because Kubernetes doesn’t have a reconciliation process for the new custom object.
 
@@ -285,7 +288,7 @@ settings for the workflow component in the workspace.
 We’ve talked about the structure of a custom object before. The resource definition class is marked with the
 `KubernetesEntity` attribute that specifies the group, kind, and API version for the custom resource definition.
 
-The schema for the custom resource is inferred from the class. You can extend the schema with more information using 
+The schema for the custom resource is inferred from the class. You can extend the schema with more information using
 [custom validation attributes][CUSTOM_VALIDATION].
 
 With the custom resource definition in place, let’s take a look at the controller to manage the resource.
@@ -318,7 +321,7 @@ public class V1Alpha1WorkspaceController : IResourceController<V1Alpha1Workspace
     private readonly OrionServerReconciler _orionServerReconciler;
     private readonly EnvironmentSecretsReconciler _environmentSecretsReconciler;
     private readonly PrefectAgentReconciler _prefectAgentReconciler;
-    
+
     public V1Alpha1WorkspaceController(ILogger<V1Alpha1WorkspaceController> logger, IKubernetes kubernetes)
     {
         _logger = logger;
@@ -336,13 +339,13 @@ public class V1Alpha1WorkspaceController : IResourceController<V1Alpha1Workspace
         await _orionDatabaseReconciler.ReconcileAsync(entity);
         await _orionServerReconciler.ReconcileAsync(entity);
         await _prefectAgentReconciler.ReconcileAsync(entity);
-        
+
         return null;
     }
 
     public Task StatusModifiedAsync(V1Alpha1Workspace entity)
     {
-        _logger.LogInformation("entity {Name} called {StatusModifiedAsyncName}", 
+        _logger.LogInformation("entity {Name} called {StatusModifiedAsyncName}",
             entity.Name(), nameof(StatusModifiedAsync));
 
         return Task.CompletedTask;
@@ -359,15 +362,15 @@ public class V1Alpha1WorkspaceController : IResourceController<V1Alpha1Workspace
 
 The controller has a couple of methods:
 
-* `ReconcileAsync`, this method performs the reconciliation of the custom object
-* `StatusModifiedAsync`, this performs logic when the status of the custom object changes
-* `DeletedAsync`, this performs logic after the custom object is deleted
+- `ReconcileAsync`, this method performs the reconciliation of the custom object
+- `StatusModifiedAsync`, this performs logic when the status of the custom object changes
+- `DeletedAsync`, this performs logic after the custom object is deleted
 
-We’re going to focus on the ReconcileAsync operation as this is the core of what a controller does. In the 
+We’re going to focus on the ReconcileAsync operation as this is the core of what a controller does. In the
 `ReconcileAsync` method we need to make sure that the state of the cluster matches the desired state
 for the workspace. Because our workspace has a number of objects, I split the reconciliation logic into several parts.
 
-For example, we call `await _orionDatabaseReconciler.ReconcileAsync(entity);` which leads to the 
+For example, we call `await _orionDatabaseReconciler.ReconcileAsync(entity);` which leads to the
 `ReconcileAsync` operation in the `OrionDatabaseReconciler` class. The `OrionDatabaseReconciler` class is responsible
 for reconciling the database related objects. It uses the following code to reconcile the database deployment:
 
@@ -510,7 +513,7 @@ docker build -t wmeints/cartographer:latest .
 Make sure to replace the image name with the one you want to use.
 
 After building the docker image, go into config/install/kustomize.yaml and update the image name there too so it matches
-the chosen image name. 
+the chosen image name.
 
 Now that we have everything ready, let’s install the operator. Run the following command from the project directory in
 your favorite terminal:
@@ -519,7 +522,7 @@ your favorite terminal:
 kubectl apply -k config/install
 ```
 
-The operator is now deployed in its own namespace with the correct permissions, etc. 
+The operator is now deployed in its own namespace with the correct permissions, etc.
 Let’s take a look at uninstallation next so we can clean up after ourselves.
 
 ## Uninstalling the custom operator
@@ -541,22 +544,22 @@ of your project or you don’t really want to write code to manage objects in Ku
 is not something for you.
 
 For me, building a custom operator made things way easier to manage even with the limited functionality that I currently
-have in my operator. And that’s all due to the fact that I don’t have to write a ton of brittle YAML. 
+have in my operator. And that’s all due to the fact that I don’t have to write a ton of brittle YAML.
 
 The operator will make sure that:
 
-* I stick to the naming convention that I came up with on day 1
-* I can quickly scale and replace workflow agent pools in my workspaces
-* Everything connects together without a lot of debugging
+- I stick to the naming convention that I came up with on day 1
+- I can quickly scale and replace workflow agent pools in my workspaces
+- Everything connects together without a lot of debugging
 
 Another thing I learned from this experiment is that C# operator SDK is a great tool. Of course, the Go Operator SDK
 has a ton more features, but if you’re not a Go developer this is a great alternative.
 
 I haven’t covered all the features here, for example:
 
-* How to use webhooks to perform additional validation
-* Sending events from the custom controller
-* Extending the status of the custom object
+- How to use webhooks to perform additional validation
+- Sending events from the custom controller
+- Extending the status of the custom object
 
 You can find a lot of these topics on the website for the C# Operator SDK.
 I hope you enjoyed this one and make sure to check out [the sources](https://github.com/wmeints/cartographer).

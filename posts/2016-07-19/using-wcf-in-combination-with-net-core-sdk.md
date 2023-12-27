@@ -1,11 +1,14 @@
 ---
 title: Using WCF in combination with .NET Core SDK
 category: .NET
-datePublished: '2016-07-19'
-dateCreated: '2017-07-31'
+datePublished: "2016-07-19"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>At my current project we're working hard to get a new REST API running on top of ASP.NET Core.<br>
+
 One of the things we need to do is communicate with a set of existing WCF Services in the back office of the company.</p>
+
 <p>This means we need WCF clients inside our ASP.NET Core project. Something that isn't very simple as it turns out.</p>
 <!-- more -->
 <p>In this article I will show you some of the options you have for building and connecting to WCF services.<br>
@@ -51,8 +54,10 @@ build with the .NET Core SDK however don't seem to support this.</p>
     Console.ReadLine();
 
     host.Close();
+
 }
 </code></pre>
+
 <p>This is fine when you don't mind running console applications for each of your services.<br>
 It does however present problems for companies that want to host several services in a single<br>
 host process. So before you jump in and start building WCF services make sure that you think about the hosting model.</p>
@@ -88,6 +93,7 @@ function Generate-WcfClient {
 
 Generate-WcfClient -wsdlPath &quot;../../Metadata/WSDL/MyService.V1.wsdl&quot; -namespace &quot;MyProject.Agents.MyService&quot; -outputPath &quot;./Agents/MyService.cs&quot;
 </code></pre>
+
 <p>You can extend this to generate several clients if you need to. To integrate it into the build you need<br>
 modify your <code>project.json</code> file and add the script to it.</p>
 <pre><code class="language-json">{

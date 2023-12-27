@@ -1,11 +1,14 @@
 ---
 title: TypeScript internal vs external modules
 category: Typescript
-datePublished: '2016-02-07'
-dateCreated: '2017-07-31'
+datePublished: "2016-02-07"
+dateCreated: "2017-07-31"
 ---
+
 <!--kg-card-begin: markdown--><p>Last week we started to build our first component in Typescript. We have done Javascript development for quite a few years and we are quite proficient at it as a team.<br>
+
 Still there is room for improvement. We really dislike the syntax of the revealing module pattern and we love strongly typed languages for the compile time checks it provides.</p>
+
 <p>Typescript feels as a language that can offers quite a few things. There is however one thing that I had a hard time with: Modules.</p>
 <p>It looks simple at first, but when you look carefully you will see that it is easy to get wrong.</p>
 <p>In this post I will show you what I mean and give a few tips on how to use Typescript modules correctly in your own applications.</p>
@@ -37,13 +40,14 @@ like you would in C# or Java. Instead you define what's called a shortcut to typ
 <pre><code class="language-typescript">module MyInternalModule.Helpers {
   export class MyClass {
 
-  }
+}
 }
 
 import Helpers = MyInternalModule.Helpers;
 
 var x = new Helpers.MyClass();
 </code></pre>
+
 <p>You can define internal modules in a single file or multiple files. When you write file1.ts and add a module A, you can define it again in file2.ts<br>
 When you compile both files they will try to merge the exported objects into the existing namespace or define the namespace when it doesn't exist yet.</p>
 <p>Actually, when you are running Typescript 1.6 or later you can replace the module syntax with the namespace syntax that is supported by the new Ecmascript 6 standard.<br>
@@ -64,6 +68,7 @@ that you want to export.</p>
 
 export var x:MyClass instance = new MyClass();
 </code></pre>
+
 <p>This does not do a lot, you need to use <code>tsc --module commonjs myfile.ts</code> to compile the file in such a way that it is compatible with the NodeJS module syntax.<br>
 If you want to use RequireJS you have to use yet another syntax to compile the file <code>tsc --module amd myfile.ts</code> so that a different syntax is generated that is<br>
 compatible with RequireJS.</p>

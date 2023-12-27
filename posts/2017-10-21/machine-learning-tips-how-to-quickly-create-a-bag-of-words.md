@@ -1,9 +1,10 @@
 ---
-title: 'Machine learning tips: How to quickly generate a bag of words'
+title: "Machine learning tips: How to quickly generate a bag of words"
 category: Machine Learning
-datePublished: '2017-10-21'
-dateCreated: '2017-10-20'
+datePublished: "2017-10-21"
+dateCreated: "2017-10-20"
 ---
+
 <!--kg-card-begin: markdown--><p>Natural language processing is all about text. But it doesn't use the text itself. You need vectors of numbers, for example a bag of words. This can be easily built with a dictionary and some for loops. But there is an easier way.</p>
 <h2 id="nlpisaboutnumbers">NLP is about numbers</h2>
 <p>For those who haven't done anything with natural language processing it may sound weird that when you want to classify a piece of text you need vectors of numbers to do so. This has to do with the fact that machine learning is a mathematical concept and not a linguistic concept.</p>
@@ -26,6 +27,7 @@ dateCreated: '2017-10-20'
 input_vectorizer = CountVectorizer(input='content')
 input_vectorizer.fit([..., ...])
 </code></pre>
+
 <p>The sample above shows the <code>CountVectorizer</code> class. This class uses the bucketing principle. It assigns a bucket to every unique word when you call fit.</p>
 <p>After you've trained the vectorizer you can transform texts</p>
 <pre><code class="language-python">vector_output = input_vectorizer.transform([...])
@@ -51,6 +53,7 @@ input_vectorizer.fit([..., ...])
 input_vectorizer = CountVectorizer(input='content')
 input_vectorizer.fit(input_documents(['data/file1.txt', 'data/file2.txt']))
 </code></pre>
+
 <p>This frees you from having to write single user sentences to file before you can transform them.</p>
 <h2 id="finalthoughts">Final thoughts</h2>
 <p>The vectorizers make life much easier. Don't forget to checkout the documentation of <a href="http://scikit-learn.org/stable/documentation.html">scikit-learn</a> to discover more!</p>
